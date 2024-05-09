@@ -1,42 +1,26 @@
 "use client";
 
 import DashboardView from "@/components/views/Dashboard";
-import DataService from "@/lib/json/service";
-import { setEmployee } from "@/store/slices/employee";
 import { setTeam } from "@/store/slices/team";
-import { setUser } from "@/store/slices/user";
+import { fetcher } from "@/utils/fetcher";
 import { Loader } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useSession } from "next-auth/react";
 import { useDispatch } from "react-redux";
+import useSWR from "swr";
 
 const DashboardPage = () => {
   const dispatch = useDispatch();
-  const [isLoading, setIsLoading] = useState(false);
+  const session: any = useSession();
 
-  useEffect(() => {
-    const fetchData = async () => {
-      setIsLoading(true);
-      try {
-        const dataService = new DataService();
-        const data: any = await dataService.getData();
-        const dataTeam = await dataService.getDataTeam();
-        const dataUser = await dataService.getDataUser("000500022");
-        dispatch(setEmployee(data));
-        dispatch(setTeam(dataTeam));
-        dispatch(setUser(dataUser));
-      } catch (error) {
-        console.error("Error fetching data:", error);
-      } finally {
-        setIsLoading(false);
-      }
-    };
+  const { data, error, isLoading } = useSWR("/api/employees", fetcher);
 
-    fetchData();
-  }, []);
-
+  if (!isLoading) {
+    const nik = session?.data?.user?.nik;
+    dispatch(setTeam(data?.data.filter((employee: any) => employee.superiorNIK === nik)));
+  }
   return isLoading ? (
-    <div className="flex justify-center items-center">
-      <Loader className="text-white" />
+    <div className="flex justify-center items-center h-screen">
+      <Loader />
     </div>
   ) : (
     <DashboardView />

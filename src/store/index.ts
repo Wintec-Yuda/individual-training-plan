@@ -1,14 +1,14 @@
 import { configureStore } from "@reduxjs/toolkit";
-import course from "./slices/course";
+import courses from "./slices/courses";
 import team from "./slices/team";
 import user from "./slices/user";
-import employee from "./slices/employee";
+import employees from "./slices/employees";
 
 export default configureStore({
   reducer: {
-    course,
+    courses,
     team,
     user,
-    employee,
+    employees,
   },
 });

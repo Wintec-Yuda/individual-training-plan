@@ -12,7 +12,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import DataService from "@/lib/json/service";
 import { errorAlert, successAlert } from "@/utils/sweetalert";
 import { useDispatch, useSelector } from "react-redux";
-import { setEmployee } from "@/store/slices/employee";
+import { setEmployees } from "@/store/slices/employees";
 
 export const columns: ColumnDef<any>[] = [
   {
@@ -105,14 +105,13 @@ export function CourseDataTable({ data, user, isRegisterCourses }: any) {
       const updatedEmployees = [...employees];
       updatedEmployees[employeeIndex] = updatedEmployee;
 
-      dispatch(setEmployee(updatedEmployees));
+      dispatch(setEmployees(updatedEmployees));
       successAlert("Courses added successfully");
     } catch (error) {
       errorAlert("Failed to add courses");
       console.error("Error occurred while adding courses to employee:", error);
     }
   };
-
 
   const handleSubmitCourse = () => {
     const selectedCourses = Object.keys(rowSelection).map((key) => data.find((item: any, index: number) => index === parseInt(key)));
