@@ -26,7 +26,7 @@ const Navbar = () => {
       <div className="flex flex-col gap-4">
         {links.map((link) => (
           <Link key={link.name} href={`/${link.path}`}>
-            <Button className={`${pathname === link.path ? "bg-green-500" : "bg-white"} hover:bg-green-500 w-full cursor-pointer p-1`}>
+            <Button className={`${pathname === link.path ? "bg-sky-500" : "bg-white"} hover:bg-sky-500 w-full cursor-pointer p-1`}>
               {link.icon}
               <p className="ml-2 text-black font-semibold hidden sm:flex">{link.name}</p>
             </Button>

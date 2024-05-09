@@ -1,36 +1,34 @@
 import { calculateYearsSince } from "@/utils";
 import { Badge } from "../ui/badge";
 
-const Profile = ({ user }: any) => {
+const Profile = ({ profile }: any) => {
   return (
     <div className="p-4 border-2 border-white flex flex-col gap-4">
-      <h1 className="text-2xl font-bold">{user.name}</h1>
-      <div className="grid grid-cols-4 gap-4">
+      <h1 className="text-2xl font-bold">{profile.name}</h1>
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
         <Box>
           <div>NIK</div>
-          <Badge className="bg-emerald-500">{user.nik}</Badge>
+          <Badge>{profile.nik}</Badge>
         </Box>
         <Box>
           <div>Employee Type</div>
-          <Badge className="bg-emerald-500">{user.empTypeGroup}</Badge>
+          <Badge>{profile.empTypeGroup}</Badge>
         </Box>
         <Box>
           <div>Job Title</div>
-          <Badge className="bg-emerald-500">{user.jobTtlName}</Badge>
+          <Badge>{profile.jobTtlName}</Badge>
         </Box>
         <Box>
           <div>Department</div>
-          <Badge className="bg-emerald-500">{user.deptName}</Badge>
+          <Badge>{profile.deptName}</Badge>
         </Box>
         <Box>
           <div>Location</div>
-          <Badge className="bg-emerald-500">{user.locationName}</Badge>
+          <Badge>{profile.locationName}</Badge>
         </Box>
         <Box>
           <div>Employee Date</div>
-          <Badge className="bg-emerald-500">
-            {`${calculateYearsSince(user.joinDate)[0]} | ${calculateYearsSince(user.joinDate)[1]} Year(s), ${calculateYearsSince(user.joinDate)[2]} Month(s)`}
-          </Badge>
+          <Badge>{`${calculateYearsSince(profile.joinDate)[0]} | ${calculateYearsSince(profile.joinDate)[1]} Year(s), ${calculateYearsSince(profile.joinDate)[2]} Month(s)`}</Badge>
         </Box>
       </div>
     </div>

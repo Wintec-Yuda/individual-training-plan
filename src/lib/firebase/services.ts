@@ -1,4 +1,4 @@
-import { collection, getDocs, getFirestore, doc, getDoc, addDoc } from "firebase/firestore";
+import { collection, getDocs, getFirestore, doc, getDoc, addDoc, updateDoc, query, where } from "firebase/firestore";
 import app from "./init";
 
 const firestore = getFirestore(app);
@@ -46,6 +46,33 @@ export async function getDataByField(collectionName: string, fieldName: string, 
         ...doc.data(),
       }));
     return data;
+  } catch (error) {
+    throw error;
+  }
+}
+
+export async function updateEmployeeInCourses(nik: string, data: any) {
+  try {
+    const coursesCollectionRef = collection(firestore, "courses");
+
+    const updatePromises:any = [];
+    for (const code of data.codes) {
+      const coursesQuery = query(coursesCollectionRef, where("code", "==", code));
+      const coursesSnapshot = await getDocs(coursesQuery);
+
+      coursesSnapshot.forEach((courseDoc) => {
+        const courseData = courseDoc.data();
+        const updatedEmployees = [...(courseData.employees || []), nik];
+
+        const courseDocRef = doc(firestore, "courses", courseDoc.id);
+        const updatePromise = updateDoc(courseDocRef, { employees: updatedEmployees });
+        updatePromises.push(updatePromise);
+      });
+    }
+
+    await Promise.all(updatePromises);
+
+    return true;
   } catch (error) {
     throw error;
   }

@@ -64,7 +64,7 @@ export const columns: ColumnDef<any>[] = [
       return (
         <div className="font-medium">
           <Link href={`/dashboard/registration/${row.getValue("nik")}`}>
-            <Button className="bg-emerald-500 hover:bg-emerald-700">Registration</Button>
+            <Button>Registration</Button>
           </Link>
         </div>
       );

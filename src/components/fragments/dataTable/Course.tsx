@@ -2,7 +2,7 @@
 
 import * as React from "react";
 import { ColumnDef, ColumnFiltersState, SortingState, VisibilityState, flexRender, getCoreRowModel, getFilteredRowModel, getPaginationRowModel, getSortedRowModel, useReactTable } from "@tanstack/react-table";
-import { ArrowUpDown, ChevronDown } from "lucide-react";
+import { ArrowUpDown, ChevronDown, Loader2 } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -13,6 +13,8 @@ import DataService from "@/lib/json/service";
 import { errorAlert, successAlert } from "@/utils/sweetalert";
 import { useDispatch, useSelector } from "react-redux";
 import { setEmployees } from "@/store/slices/employees";
+import coursesInstance from "@/instances/courses";
+import { useSession } from "next-auth/react";
 
 export const columns: ColumnDef<any>[] = [
   {
@@ -55,14 +57,17 @@ export const columns: ColumnDef<any>[] = [
   },
 ];
 
-export function CourseDataTable({ data, user, isRegisterCourses }: any) {
+export function CourseDataTable({ data, isRegisterCourses }: any) {
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([]);
   const [columnVisibility, setColumnVisibility] = React.useState<VisibilityState>({});
   const [rowSelection, setRowSelection] = React.useState({});
+  const [loading, setLoading] = React.useState(false);
 
-  const dispatch = useDispatch();
-  const employees = useSelector((state: any) => state.employee.data);
+  const session: any = useSession();
+  const token = session.data?.token;
+
+  const user = useSelector((state: any) => state.user.data);
 
   const table = useReactTable({
     data,
@@ -84,32 +89,20 @@ export function CourseDataTable({ data, user, isRegisterCourses }: any) {
   });
 
   const handleAddCourse = async () => {
+    setLoading(true);
     try {
       const selectedCourses = Object.keys(rowSelection).map((key) => data.find((item: any, index: number) => index === parseInt(key)));
-      const employeeIndex = employees.findIndex((employee: any) => employee.nik === user.nik);
 
-      if (employeeIndex === -1) {
-        errorAlert("Employee not found");
-        return;
-      }
+      const codes = {
+        codes: selectedCourses.map((item: any) => item.code),
+      };
 
-      const updatedEmployee = { ...employees[employeeIndex] };
-
-      if (!updatedEmployee.courses) {
-        updatedEmployee.courses = selectedCourses;
-      } else {
-        updatedEmployee.courses = [...updatedEmployee.courses, ...selectedCourses];
-      }
-
-      // Update the employees array with the updated employee object
-      const updatedEmployees = [...employees];
-      updatedEmployees[employeeIndex] = updatedEmployee;
-
-      dispatch(setEmployees(updatedEmployees));
-      successAlert("Courses added successfully");
+      const response = await coursesInstance.addEmployee(user.nik, codes, token);
+      successAlert(response.data.message);
     } catch (error) {
-      errorAlert("Failed to add courses");
-      console.error("Error occurred while adding courses to employee:", error);
+      errorAlert("Internal Server Error");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -188,11 +181,23 @@ export function CourseDataTable({ data, user, isRegisterCourses }: any) {
       </div>
       <div className="flex ps-4 pb-2">
         {isRegisterCourses ? (
-          <Button className="bg-blue-500 hover:bg-blue-700" onClick={() => handleAddCourse()}>
-            Add Course
+          loading ? (
+            <Button disabled>
+              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+              Please wait
+            </Button>
+          ) : (
+            <Button className="bg-emerald-500 hover:bg-emerald-700" onClick={() => handleAddCourse()}>
+              Add Course
+            </Button>
+          )
+        ) : loading ? (
+          <Button disabled>
+            <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+            Please wait
           </Button>
         ) : (
-          <Button className="bg-green-500 hover:bg-green-700" onClick={() => handleSubmitCourse()}>
+          <Button className="bg-emerald-500 hover:bg-emerald-700" onClick={() => handleSubmitCourse()}>
             Submit Course
           </Button>
         )}

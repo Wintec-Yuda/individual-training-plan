@@ -52,7 +52,7 @@ const LoginView = () => {
   return (
     <AuthLayout title="Individual Training Plan">
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(handleSubmit)} className="max-w-md w-full flex flex-col gap-4">
+        <form onSubmit={form.handleSubmit(handleSubmit)} className="max-w-md w-full flex flex-col gap-4 ">
           <FormField
             control={form.control}
             name="userPrincipalName"
@@ -61,7 +61,7 @@ const LoginView = () => {
                 <FormItem>
                   <FormLabel>User principal name</FormLabel>
                   <FormControl>
-                    <Input type="text" className="text-slate-950 font-semibold" {...field} />
+                    <Input type="text" className="font-semibold" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -69,12 +69,12 @@ const LoginView = () => {
             }}
           />
           {loading ? (
-            <Button disabled className="mt-3">
+            <Button disabled className="mt-3 text-lg bg-emerald-700">
               <Loader2 className="mr-2 h-4 w-4 animate-spin" />
               Please wait...
             </Button>
           ) : (
-            <Button type="submit" className="mt-3 bg-emerald-500 hover:bg-emerald-700">
+            <Button type="submit" className="mt-3 text-lg bg-emerald-500 hover:bg-emerald-700">
               Login
             </Button>
           )}
