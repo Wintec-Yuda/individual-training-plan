@@ -1,5 +1,6 @@
 import { collection, getDocs, getFirestore, doc, getDoc, addDoc, updateDoc, query, where } from "firebase/firestore";
 import app from "./init";
+import { log } from "util";
 
 const firestore = getFirestore(app);
 
@@ -51,18 +52,24 @@ export async function getDataByField(collectionName: string, fieldName: string, 
   }
 }
 
-export async function updateEmployeeInCourses(nik: string, data: any) {
+export async function manageCoursesEmployee(nik: string, data: any, action: "register" | "submit") {
   try {
-    const coursesCollectionRef = collection(firestore, "courses");
+    const courseRef = collection(firestore, "courses");
+    const updatePromises: any = [];
 
-    const updatePromises:any = [];
     for (const code of data.codes) {
-      const coursesQuery = query(coursesCollectionRef, where("code", "==", code));
+      const coursesQuery = query(courseRef, where("code", "==", code));
       const coursesSnapshot = await getDocs(coursesQuery);
 
       coursesSnapshot.forEach((courseDoc) => {
         const courseData = courseDoc.data();
-        const updatedEmployees = [...(courseData.employees || []), nik];
+        const updatedEmployees = { ...courseData.employees };
+
+        if (action === "submit") {
+          updatedEmployees[nik].isSubmit = true;
+        } else if (action === "register") {
+          updatedEmployees[nik] = { isSubmit: false };
+        }
 
         const courseDocRef = doc(firestore, "courses", courseDoc.id);
         const updatePromise = updateDoc(courseDocRef, { employees: updatedEmployees });
@@ -71,7 +78,6 @@ export async function updateEmployeeInCourses(nik: string, data: any) {
     }
 
     await Promise.all(updatePromises);
-
     return true;
   } catch (error) {
     throw error;

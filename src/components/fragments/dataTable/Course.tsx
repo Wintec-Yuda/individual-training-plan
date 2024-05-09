@@ -9,10 +9,8 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { DropdownMenu, DropdownMenuCheckboxItem, DropdownMenuContent, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { Input } from "@/components/ui/input";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import DataService from "@/lib/json/service";
 import { errorAlert, successAlert } from "@/utils/sweetalert";
 import { useDispatch, useSelector } from "react-redux";
-import { setEmployees } from "@/store/slices/employees";
 import coursesInstance from "@/instances/courses";
 import { useSession } from "next-auth/react";
 
@@ -57,12 +55,12 @@ export const columns: ColumnDef<any>[] = [
   },
 ];
 
-export function CourseDataTable({ data, isRegisterCourses }: any) {
+export function CourseDataTable({ data, isCourses }: any) {
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([]);
   const [columnVisibility, setColumnVisibility] = React.useState<VisibilityState>({});
   const [rowSelection, setRowSelection] = React.useState({});
-  const [loading, setLoading] = React.useState(false);
+  const [isLoading, setIsLoading] = React.useState(false);
 
   const session: any = useSession();
   const token = session.data?.token;
@@ -88,28 +86,28 @@ export function CourseDataTable({ data, isRegisterCourses }: any) {
     },
   });
 
-  const handleAddCourse = async () => {
-    setLoading(true);
+  const handleClick = async (type: string) => {
+    setIsLoading(true);
     try {
       const selectedCourses = Object.keys(rowSelection).map((key) => data.find((item: any, index: number) => index === parseInt(key)));
 
-      const codes = {
+      const selectedData: any = {
         codes: selectedCourses.map((item: any) => item.code),
       };
 
-      const response = await coursesInstance.addEmployee(user.nik, codes, token);
-      successAlert(response.data.message);
+      if (type === "list") {
+        const response = await coursesInstance.manageCoursesEmployee(user.nik, "register", selectedData, token);
+        successAlert(response.data.message);
+      } else if (type === "register") {
+        const response = await coursesInstance.manageCoursesEmployee(user.nik, "submit", selectedData, token);
+        successAlert(response.data.message);
+      }
     } catch (error) {
       errorAlert("Internal Server Error");
     } finally {
-      setLoading(false);
+      setIsLoading(false);
+      setRowSelection({});
     }
-  };
-
-  const handleSubmitCourse = () => {
-    const selectedCourses = Object.keys(rowSelection).map((key) => data.find((item: any, index: number) => index === parseInt(key)));
-
-    console.log(selectedCourses);
   };
 
   return (
@@ -179,27 +177,20 @@ export function CourseDataTable({ data, isRegisterCourses }: any) {
           </Button>
         </div>
       </div>
-      <div className="flex ps-4 pb-2">
-        {isRegisterCourses ? (
-          loading ? (
-            <Button disabled>
-              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-              Please wait
-            </Button>
-          ) : (
-            <Button className="bg-emerald-500 hover:bg-emerald-700" onClick={() => handleAddCourse()}>
-              Add Course
-            </Button>
-          )
-        ) : loading ? (
-          <Button disabled>
-            <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-            Please wait
-          </Button>
-        ) : (
-          <Button className="bg-emerald-500 hover:bg-emerald-700" onClick={() => handleSubmitCourse()}>
-            Submit Course
-          </Button>
+      <div className="flex pb-2">
+        {["list", "register"].map(
+          (type: string) =>
+            isCourses === type &&
+            (isLoading ? (
+              <Button disabled>
+                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                Please wait
+              </Button>
+            ) : (
+              <Button key={type} onClick={() => handleClick(type)} className={`bg-green-600 hover:bg-green-800`}>
+                {type === "list" ? "Register Courses" : "Submit Courses"}
+              </Button>
+            ))
         )}
       </div>
     </div>

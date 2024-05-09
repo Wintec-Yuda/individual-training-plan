@@ -1,8 +1,8 @@
 import instance from "@/lib/axios/instance";
 
 const coursesInstance = {
-  addEmployee: (nik: string, data: any, token: string) =>
-    instance.put(`/api/courses/${nik}`, data, {
+  manageCoursesEmployee: (nik: string, action: string, data: any, token: string) =>
+    instance.put(`/api/courses/${action}/${nik}`, data, {
       headers: { Authorization: `Bearer ${token}` },
     }),
 };

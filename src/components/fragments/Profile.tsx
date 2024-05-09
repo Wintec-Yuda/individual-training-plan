@@ -1,34 +1,36 @@
 import { calculateYearsSince } from "@/utils";
 import { Badge } from "../ui/badge";
+import { useSelector } from "react-redux";
 
-const Profile = ({ profile }: any) => {
+const Profile = () => {
+  const user: any = useSelector((state: any) => state.user.data);
   return (
     <div className="p-4 border-2 border-white flex flex-col gap-4">
-      <h1 className="text-2xl font-bold">{profile.name}</h1>
+      <h1 className="text-2xl font-bold">{user.name}</h1>
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
         <Box>
           <div>NIK</div>
-          <Badge>{profile.nik}</Badge>
+          <Badge>{user.nik}</Badge>
         </Box>
         <Box>
           <div>Employee Type</div>
-          <Badge>{profile.empTypeGroup}</Badge>
+          <Badge>{user.empTypeGroup}</Badge>
         </Box>
         <Box>
           <div>Job Title</div>
-          <Badge>{profile.jobTtlName}</Badge>
+          <Badge>{user.jobTtlName}</Badge>
         </Box>
         <Box>
           <div>Department</div>
-          <Badge>{profile.deptName}</Badge>
+          <Badge>{user.deptName}</Badge>
         </Box>
         <Box>
           <div>Location</div>
-          <Badge>{profile.locationName}</Badge>
+          <Badge>{user.locationName}</Badge>
         </Box>
         <Box>
           <div>Employee Date</div>
-          <Badge>{`${calculateYearsSince(profile.joinDate)[0]} | ${calculateYearsSince(profile.joinDate)[1]} Year(s), ${calculateYearsSince(profile.joinDate)[2]} Month(s)`}</Badge>
+          <Badge>{`${calculateYearsSince(user.joinDate)[0]} | ${calculateYearsSince(user.joinDate)[1]} Year(s), ${calculateYearsSince(user.joinDate)[2]} Month(s)`}</Badge>
         </Box>
       </div>
     </div>
