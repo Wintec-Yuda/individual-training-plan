@@ -9,6 +9,10 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { DropdownMenu, DropdownMenuCheckboxItem, DropdownMenuContent, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { Input } from "@/components/ui/input";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import DataService from "@/lib/json/service";
+import { errorAlert, successAlert } from "@/utils/sweetalert";
+import { useDispatch, useSelector } from "react-redux";
+import { setEmployee } from "@/store/slices/employee";
 
 export const columns: ColumnDef<any>[] = [
   {
@@ -51,11 +55,14 @@ export const columns: ColumnDef<any>[] = [
   },
 ];
 
-export function CourseDataTable({ data }: any) {
+export function CourseDataTable({ data, user, isRegisterCourses }: any) {
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([]);
   const [columnVisibility, setColumnVisibility] = React.useState<VisibilityState>({});
   const [rowSelection, setRowSelection] = React.useState({});
+
+  const dispatch = useDispatch();
+  const employees = useSelector((state: any) => state.employee.data);
 
   const table = useReactTable({
     data,
@@ -76,7 +83,38 @@ export function CourseDataTable({ data }: any) {
     },
   });
 
-  const handleAddCourse = () => {
+  const handleAddCourse = async () => {
+    try {
+      const selectedCourses = Object.keys(rowSelection).map((key) => data.find((item: any, index: number) => index === parseInt(key)));
+      const employeeIndex = employees.findIndex((employee: any) => employee.nik === user.nik);
+
+      if (employeeIndex === -1) {
+        errorAlert("Employee not found");
+        return;
+      }
+
+      const updatedEmployee = { ...employees[employeeIndex] };
+
+      if (!updatedEmployee.courses) {
+        updatedEmployee.courses = selectedCourses;
+      } else {
+        updatedEmployee.courses = [...updatedEmployee.courses, ...selectedCourses];
+      }
+
+      // Update the employees array with the updated employee object
+      const updatedEmployees = [...employees];
+      updatedEmployees[employeeIndex] = updatedEmployee;
+
+      dispatch(setEmployee(updatedEmployees));
+      successAlert("Courses added successfully");
+    } catch (error) {
+      errorAlert("Failed to add courses");
+      console.error("Error occurred while adding courses to employee:", error);
+    }
+  };
+
+
+  const handleSubmitCourse = () => {
     const selectedCourses = Object.keys(rowSelection).map((key) => data.find((item: any, index: number) => index === parseInt(key)));
 
     console.log(selectedCourses);
@@ -150,9 +188,15 @@ export function CourseDataTable({ data }: any) {
         </div>
       </div>
       <div className="flex ps-4 pb-2">
-        <Button className="bg-blue-500 hover:bg-blue-700" onClick={() => handleAddCourse()}>
-          Add Course
-        </Button>
+        {isRegisterCourses ? (
+          <Button className="bg-blue-500 hover:bg-blue-700" onClick={() => handleAddCourse()}>
+            Add Course
+          </Button>
+        ) : (
+          <Button className="bg-green-500 hover:bg-green-700" onClick={() => handleSubmitCourse()}>
+            Submit Course
+          </Button>
+        )}
       </div>
     </div>
   );

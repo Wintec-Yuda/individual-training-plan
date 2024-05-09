@@ -2,6 +2,7 @@
 
 import DashboardView from "@/components/views/Dashboard";
 import DataService from "@/lib/json/service";
+import { setEmployee } from "@/store/slices/employee";
 import { setTeam } from "@/store/slices/team";
 import { setUser } from "@/store/slices/user";
 import { Loader } from "lucide-react";
@@ -17,8 +18,10 @@ const DashboardPage = () => {
       setIsLoading(true);
       try {
         const dataService = new DataService();
+        const data: any = await dataService.getData();
         const dataTeam = await dataService.getDataTeam();
         const dataUser = await dataService.getDataUser("000500022");
+        dispatch(setEmployee(data));
         dispatch(setTeam(dataTeam));
         dispatch(setUser(dataUser));
       } catch (error) {
