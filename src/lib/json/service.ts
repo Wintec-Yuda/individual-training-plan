@@ -1,14 +1,15 @@
 export default class DataService {
-  async getSupervisor(): Promise<any[]> {
+  async getDataUser(nik: string = "000500022"): Promise<any[]> {
     try {
       const response = await fetch("employee.json");
+      
       if (!response.ok) {
         throw new Error("Failed to fetch data");
       }
       const jsonData: any[] = await response.json();
 
-      const supervisor = jsonData.filter((employee: any) => employee.nik === "000500022");
-      return supervisor;
+      const user = jsonData.filter((employee: any) => employee.nik === nik);
+      return user[0];
     } catch (error) {
       throw error;
     }

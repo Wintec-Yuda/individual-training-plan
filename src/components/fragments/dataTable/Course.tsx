@@ -36,13 +36,6 @@ export const columns: ColumnDef<any>[] = [
     cell: ({ row }) => <div className="lowercase">{row.getValue("name")}</div>,
   },
   {
-    accessorKey: "level",
-    header: () => <div>Level</div>,
-    cell: ({ row }) => {
-      return <div className="font-medium">{row.getValue("level")}</div>;
-    },
-  },
-  {
     accessorKey: "target",
     header: () => <div>Target</div>,
     cell: ({ row }) => {
@@ -82,6 +75,12 @@ export function CourseDataTable({ data }: any) {
       rowSelection,
     },
   });
+
+  const handleAddCourse = () => {
+    const selectedCourses = Object.keys(rowSelection).map((key) => data.find((item: any, index: number) => index === parseInt(key)));
+
+    console.log(selectedCourses);
+  };
 
   return (
     <div className="w-full shadow-lg shadow-gray-300 px-2">
@@ -149,6 +148,11 @@ export function CourseDataTable({ data }: any) {
             Next
           </Button>
         </div>
+      </div>
+      <div className="flex ps-4 pb-2">
+        <Button className="bg-blue-500 hover:bg-blue-700" onClick={() => handleAddCourse()}>
+          Add Course
+        </Button>
       </div>
     </div>
   );

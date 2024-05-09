@@ -3,6 +3,7 @@
 import DashboardView from "@/components/views/Dashboard";
 import DataService from "@/lib/json/service";
 import { setTeam } from "@/store/slices/team";
+import { setUser } from "@/store/slices/user";
 import { Loader } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
@@ -16,8 +17,10 @@ const DashboardPage = () => {
       setIsLoading(true);
       try {
         const dataService = new DataService();
-        const data = await dataService.getDataTeam();
-        dispatch(setTeam(data));
+        const dataTeam = await dataService.getDataTeam();
+        const dataUser = await dataService.getDataUser("000500022");
+        dispatch(setTeam(dataTeam));
+        dispatch(setUser(dataUser));
       } catch (error) {
         console.error("Error fetching data:", error);
       } finally {
@@ -29,7 +32,7 @@ const DashboardPage = () => {
   }, []);
 
   return isLoading ? (
-    <div className="flex justify-center items-center h-screen">
+    <div className="flex justify-center items-center">
       <Loader className="text-white" />
     </div>
   ) : (

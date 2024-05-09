@@ -9,6 +9,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { DropdownMenu, DropdownMenuCheckboxItem, DropdownMenuContent, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { Input } from "@/components/ui/input";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import Link from "next/link";
 
 export const columns: ColumnDef<any>[] = [
   {
@@ -54,6 +55,19 @@ export const columns: ColumnDef<any>[] = [
     header: () => <div>Department</div>,
     cell: ({ row }) => {
       return <div className="font-medium">{row.getValue("deptName")}</div>;
+    },
+  },
+  {
+    accessorKey: "registration",
+    header: () => <div>Action</div>,
+    cell: ({ row }) => {
+      return (
+        <div className="font-medium">
+          <Link href={`/dashboard/registration/${row.getValue("nik")}`}>
+            <Button className="bg-emerald-500 hover:bg-emerald-700">Registration</Button>
+          </Link>
+        </div>
+      );
     },
   },
 ];

@@ -17,6 +17,7 @@ const RegistrationPage = ({ employee }: any) => {
         try {
           const dataService = new DataService();
           const data = await dataService.getDataCourse();
+          
           dispatch(setCourse(data));
         } catch (error) {
           console.error("Error fetching data:", error);
@@ -29,7 +30,7 @@ const RegistrationPage = ({ employee }: any) => {
     }, []);
 
     return isLoading ? (
-      <div className="flex justify-center items-center h-screen">
+      <div className="flex justify-center items-center">
         <Loader className="text-white" />
       </div>
     ) : (
