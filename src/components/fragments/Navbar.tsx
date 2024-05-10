@@ -11,7 +11,7 @@ import { Loader2 } from "lucide-react";
 
 const links = [
   { name: "Dashboard", path: "dashboard", icon: <TbLayoutDashboardFilled className="text-lg text-black" />, golongan: ["4", "5"] },
-  { name: "Approve", path: "approve", icon: <FaCheckCircle className="text-lg text-black" />, golongan: ["5"] },
+  { name: "Approve", path: "approve", icon: <FaCheckCircle className="text-lg text-black" />, golongan: ["5"], jobTtlName: "People Development Supervisor" },
 ];
 
 const Navbar = () => {
@@ -38,7 +38,7 @@ const Navbar = () => {
       <div className="flex flex-col gap-4">
         {links.map(
           (link) =>
-            link.golongan?.includes(data.golongan) && (
+            (link.golongan?.includes(data.golongan) || link.jobTtlName === data.jobTtlName) && (
               <Link key={link.name} href={`/${link.path}`}>
                 <Button className={`${pathname === link.path ? "bg-sky-500" : "bg-white"} hover:bg-sky-500 w-full cursor-pointer p-1`}>
                   {link.icon}

@@ -55,6 +55,7 @@ export async function manageCoursesEmployee(data: any) {
   try {
     const courseRef = collection(firestore, "courses");
     const updatePromises: any = [];
+    let i = 0;
 
     for (const code of data.codes) {
       const coursesQuery = query(courseRef, where("code", "==", code));
@@ -75,9 +76,12 @@ export async function manageCoursesEmployee(data: any) {
             approve: data.golongan === "5" ? 2 : 1,
           };
         } else if (data.action === "approve") {
-          data.nikApproves.forEach((nik: string) => {
-            updatedEmployees[nik].approve = (updatedEmployees[nik].approve || 0) + 1;
-          });
+          if (["1", "2", "3"].includes(updatedEmployees[data.nikApproves[i]].golongan) && updatedEmployees[data.nikApproves[i]].approve === 2) {
+            updatedEmployees[data.nikApproves[i]].approve = (updatedEmployees[data.nikApproves[i]].approve || 0) + 2;
+          } else {
+            updatedEmployees[data.nikApproves[i]].approve = (updatedEmployees[data.nikApproves[i]].approve || 0) + 1;
+          }
+          i++;
         }
 
         const courseDocRef = doc(firestore, "courses", courseDoc.id);

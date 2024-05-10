@@ -2,7 +2,7 @@ import { getToken } from "next-auth/jwt";
 import { NextRequest, NextResponse, NextFetchEvent, NextMiddleware } from "next/server";
 
 const authPage = ["auth"];
-const golongan4 = ["dashboard"];
+const golongan4 = ["dashboard", "approve"];
 const golongan5 = ["dashboard", "approve"];
 
 export default function withAuth(middleware: NextMiddleware, requireAuth: string[] = []) {
@@ -18,6 +18,7 @@ export default function withAuth(middleware: NextMiddleware, requireAuth: string
         if (authPage.includes(pathname)) {
           return NextResponse.redirect(new URL("/dashboard", req.url));
         }
+
         if (token.golongan === "4" && !golongan4.includes(pathname)) {
           return NextResponse.redirect(new URL("/dashboard", req.url));
         }
