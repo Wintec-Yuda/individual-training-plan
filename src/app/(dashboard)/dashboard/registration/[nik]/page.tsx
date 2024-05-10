@@ -7,7 +7,7 @@ import { fetcher } from "@/utils/fetcher";
 import { errorAlert } from "@/utils/sweetalert";
 import { Loader } from "lucide-react";
 import { usePathname } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useDispatch } from "react-redux";
 import useSWR from "swr";
 
@@ -21,8 +21,8 @@ const RegistrationPage = () => {
       try {
         const data = await fetcher(`/api/employees/${nik}`);
         dispatch(setUser(data.data[0]));
-      } catch (error) {
-        errorAlert("Internal Server Error");
+      } catch (error: any) {
+        errorAlert(error.response.data.message);
       }
     };
     fetchData();

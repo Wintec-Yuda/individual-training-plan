@@ -24,6 +24,10 @@ const handler = NextAuth({
         return {
           id: user.id,
           nik: user.nik,
+          name: user.name,
+          jobTtlName: user.jobTtlName,
+          golongan: user.golongan,
+          superiorNIK: user.superiorNIK,
         };
       },
     }),
@@ -33,19 +37,23 @@ const handler = NextAuth({
       if (account?.provider === "credentials") {
         token.id = user.id;
         token.nik = user.nik;
+        token.name = user.name;
+        token.jobTtlName = user.jobTtlName;
+        token.golongan = user.golongan;
+        token.superiorNIK = user.superiorNIK;
       }
 
       return token;
     },
 
     async session({ session, token }: any) {
-      if ("id" in token) {
-        session.user.id = token.id;
-      }
-      if ("nik" in token) {
-        session.user.nik = token.nik;
-      }
+      const keys = ["id", "nik", "name", "jobTtlName", "golongan", "superiorNIK"];
 
+      for (const key of keys) {
+        if (key in token) {
+          session.user[key] = token[key];
+        }
+      }
       const accessToken = jwt.sign(token, process.env.NEXTAUTH_SECRET || "", {
         algorithm: "HS256",
       });

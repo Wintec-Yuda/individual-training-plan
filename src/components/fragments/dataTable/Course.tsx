@@ -93,17 +93,15 @@ export function CourseDataTable({ data, isCourses }: any) {
 
       const selectedData: any = {
         codes: selectedCourses.map((item: any) => item.code),
+        nik: user.nik,
+        superiorNIK: user.superiorNIK,
+        action: type,
       };
 
-      if (type === "list") {
-        const response = await coursesInstance.manageCoursesEmployee(user.nik, "register", selectedData, token);
-        successAlert(response.data.message);
-      } else if (type === "register") {
-        const response = await coursesInstance.manageCoursesEmployee(user.nik, "submit", selectedData, token);
-        successAlert(response.data.message);
-      }
-    } catch (error) {
-      errorAlert("Internal Server Error");
+      const response = await coursesInstance.manageCoursesEmployee(selectedData, token);
+      successAlert(response.data.message);
+    } catch (error: any) {
+      errorAlert(error.response.data.message);
     } finally {
       setIsLoading(false);
       setRowSelection({});

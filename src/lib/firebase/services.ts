@@ -52,12 +52,12 @@ export async function getDataByField(collectionName: string, fieldName: string, 
   }
 }
 
-export async function manageCoursesEmployee(nik: string, data: any, action: "register" | "submit") {
+export async function manageCoursesEmployee(nik: string, codes: string[], action: "list" | "register") {
   try {
     const courseRef = collection(firestore, "courses");
     const updatePromises: any = [];
 
-    for (const code of data.codes) {
+    for (const code of codes) {
       const coursesQuery = query(courseRef, where("code", "==", code));
       const coursesSnapshot = await getDocs(coursesQuery);
 
@@ -65,9 +65,9 @@ export async function manageCoursesEmployee(nik: string, data: any, action: "reg
         const courseData = courseDoc.data();
         const updatedEmployees = { ...courseData.employees };
 
-        if (action === "submit") {
+        if (action === "register") {
           updatedEmployees[nik].isSubmit = true;
-        } else if (action === "register") {
+        } else if (action === "list") {
           updatedEmployees[nik] = { isSubmit: false };
         }
 
