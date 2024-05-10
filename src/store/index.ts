@@ -5,6 +5,7 @@ import user from "./slices/user";
 import employees from "./slices/employees";
 import registeredCourses from "./slices/registeredCourses";
 import approves from "./slices/approves";
+import realizationCourses from "./slices/realizationCourses";
 
 export default configureStore({
   reducer: {
@@ -14,5 +15,6 @@ export default configureStore({
     employees,
     registeredCourses,
     approves,
+    realizationCourses,
   },
 });

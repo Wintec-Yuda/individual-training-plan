@@ -2,22 +2,7 @@ import { useSelector } from "react-redux";
 import { ApproveDataTable } from "../fragments/dataTable/Approve";
 import { useSession } from "next-auth/react";
 import { Loader2 } from "lucide-react";
-
-interface Employee {
-  isSubmit: boolean;
-  name: string;
-  approve: number;
-  empccname: string;
-  golongan: string;
-}
-
-interface Course {
-  employees: {
-    [key: string]: Employee;
-  };
-  code: string;
-  name: string;
-}
+import { IEmployee } from "@/interfaces";
 
 const ApproveView = () => {
   const registeredCourses = useSelector((state: any) => state.registeredCourses.data);
@@ -40,7 +25,7 @@ const ApproveView = () => {
 
   registeredCourses.forEach((course: any) => {
     const employees = course.employees;
-    Object.entries<Employee>(employees).forEach(([nik, employee]) => {
+    Object.entries<IEmployee>(employees).forEach(([nik, employee]) => {
       if (employee.isSubmit) {
         userApproves.forEach((approval: any) => {
           if (approval.empccnames) {
