@@ -10,7 +10,7 @@ import { DropdownMenu, DropdownMenuCheckboxItem, DropdownMenuContent, DropdownMe
 import { Input } from "@/components/ui/input";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { errorAlert, successAlert } from "@/utils/sweetalert";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import coursesInstance from "@/instances/courses";
 import { useSession } from "next-auth/react";
 
@@ -61,12 +61,8 @@ export function CourseDataTable({ data, isCourses }: any) {
   const [columnVisibility, setColumnVisibility] = React.useState<VisibilityState>({});
   const [rowSelection, setRowSelection] = React.useState({});
   const [isLoading, setIsLoading] = React.useState(false);
-
-  const session: any = useSession();
-  const token = session.data?.token;
-
+  
   const user = useSelector((state: any) => state.user.data);
-
   const table = useReactTable({
     data,
     columns,
@@ -85,6 +81,16 @@ export function CourseDataTable({ data, isCourses }: any) {
       rowSelection,
     },
   });
+
+  const session: any = useSession();
+  if (session.status === "loading") {
+    return (
+      <div className="flex justify-center items-center h-screen">
+        <Loader2 className="w-8 h-8 animate-spin" />
+      </div>
+    );
+  }
+  const token = session.data?.token;
 
   const handleClick = async (type: string) => {
     setIsLoading(true);

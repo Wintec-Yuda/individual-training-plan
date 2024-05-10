@@ -75,7 +75,7 @@ export async function PUT(request: NextRequest) {
     const decoded: any = jwt.verify(token, process.env.NEXTAUTH_SECRET || "");
     const data = await request.json();
 
-    if (decoded && decoded.nik === data.superionNIK) {
+    if (decoded && (decoded.nik === data.superiorNIK || decoded.nik === data.nik)) {
       const status = await manageCoursesEmployee(data.nik, data.codes, data.action);
 
       if (status) {
