@@ -22,7 +22,7 @@ const RegistrationView = () => {
       <Profile />
       <div className="flex gap-2">
         {["list", "register", "submit"].map((type: string) => (
-          <Button key={type} onClick={() => setIsCourses(type)} className={`${isCourses === type ? "bg-blue-500" : "bg-black"} hover:bg-blue-500`}>
+          <Button key={type} onClick={() => setIsCourses(type)} className={`${isCourses === type ? "bg-blue-500" : "bg-white text-black border border-black"} hover:bg-blue-500`}>
             {type === "list" ? "Courses List" : type === "register" ? "Registered Courses" : "Submit Courses"}
           </Button>
         ))}

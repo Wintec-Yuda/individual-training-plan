@@ -10,9 +10,10 @@ import { DropdownMenu, DropdownMenuCheckboxItem, DropdownMenuContent, DropdownMe
 import { Input } from "@/components/ui/input";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { errorAlert, successAlert } from "@/utils/sweetalert";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import coursesInstance from "@/instances/courses";
 import { useSession } from "next-auth/react";
+import { registerCourses, submitCourses } from "@/store/slices/courses";
 
 export const columns: ColumnDef<any>[] = [
   {
@@ -61,7 +62,9 @@ export function CourseDataTable({ data, isCourses }: any) {
   const [columnVisibility, setColumnVisibility] = React.useState<VisibilityState>({});
   const [rowSelection, setRowSelection] = React.useState({});
   const [isLoading, setIsLoading] = React.useState(false);
-  
+
+  const dispatch = useDispatch();
+
   const user = useSelector((state: any) => state.user.data);
   const table = useReactTable({
     data,
@@ -108,7 +111,27 @@ export function CourseDataTable({ data, isCourses }: any) {
       };
 
       const response = await coursesInstance.manageCoursesEmployee(selectedData, token);
+
       successAlert(response.data.message);
+
+      if (type === "list") {
+        const employees = selectedData.codes.reduce((acc: any, code: string) => {
+          acc[user.nik] = { isSubmit: false };
+          return acc;
+        }, {});
+
+        const registerData = {
+          codes: selectedData.codes,
+          employees,
+        };
+        dispatch(registerCourses(registerData));
+      } else if (type === "register") {
+        const registerData = {
+          codes: selectedData.codes,
+          nik: user.nik,
+        };
+        dispatch(submitCourses(registerData));
+      }
     } catch (error: any) {
       errorAlert(error.response.data.message);
     } finally {
