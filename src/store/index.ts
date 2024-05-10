@@ -4,7 +4,7 @@ import team from "./slices/team";
 import user from "./slices/user";
 import employees from "./slices/employees";
 import registeredCourses from "./slices/registeredCourses";
-import approvals from "./slices/approvals";
+import approves from "./slices/approves";
 
 export default configureStore({
   reducer: {
@@ -13,6 +13,6 @@ export default configureStore({
     user,
     employees,
     registeredCourses,
-    approvals,
+    approves,
   },
 });

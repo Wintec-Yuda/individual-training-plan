@@ -21,7 +21,7 @@ interface Course {
 
 const ApproveView = () => {
   const registeredCourses = useSelector((state: any) => state.registeredCourses.data);
-  const approvals = useSelector((state: any) => state.approvals.data);
+  const approves = useSelector((state: any) => state.approves.data);
   
   const session: any = useSession();
   if (session.status === "loading") {
@@ -34,8 +34,7 @@ const ApproveView = () => {
 
   const nik = session?.data?.user?.nik;
 
-
-  const userApprovals = approvals.filter((approval: any) => approval.nik === nik);
+  const userApproves = approves.filter((approval: any) => approval.nik === nik);
 
   const submittedCourses: any = [];
 
@@ -43,7 +42,7 @@ const ApproveView = () => {
     const employees = course.employees;
     Object.entries<Employee>(employees).forEach(([nik, employee]) => {
       if (employee.isSubmit) {
-        userApprovals.forEach((approval: any) => {
+        userApproves.forEach((approval: any) => {
           if (approval.empccnames) {
             if (approval.empccnames.includes(employee.empccname) && approval.approve == employee.approve) {
               submittedCourses.push({

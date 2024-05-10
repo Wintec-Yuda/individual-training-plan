@@ -11,8 +11,9 @@ import { Input } from "@/components/ui/input";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { useSession } from "next-auth/react";
 import coursesInstance from "@/instances/courses";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { errorAlert, successAlert } from "@/utils/sweetalert";
+import { approveCourses } from "@/store/slices/courses";
 
 export const columns: ColumnDef<any>[] = [
   {
@@ -76,6 +77,8 @@ export function ApproveDataTable({ data }: any) {
   const [rowSelection, setRowSelection] = React.useState({});
   const [isLoading, setIsLoading] = React.useState(false);
 
+  const dispatch = useDispatch();
+
   const user = useSelector((state: any) => state.user.data);
   const table = useReactTable({
     data,
@@ -123,6 +126,11 @@ export function ApproveDataTable({ data }: any) {
       };
 
       const response = await coursesInstance.manageCoursesEmployee(selectedData, token);
+      const approveData = {
+        codes: selectedCourses.map((item: any) => item.codeCourse),
+        nikApproves: selectedCourses.map((item: any) => item.nik),
+      };
+      dispatch(approveCourses(approveData));
       successAlert(response.data.message);
     } catch (error: any) {
       errorAlert(error.response.data.message);
