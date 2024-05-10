@@ -75,14 +75,14 @@ export async function PUT(request: NextRequest) {
     const decoded: any = jwt.verify(token, process.env.NEXTAUTH_SECRET || "");
     const data = await request.json();
 
-    if (decoded && (decoded.nik === data.superiorNIK || decoded.nik === data.nik)) {
-      const status = await manageCoursesEmployee(data.nik, data.codes, data.action);
+    if (decoded) {
+      const status = await manageCoursesEmployee(data);
 
       if (status) {
         return NextResponse.json(
           {
             success: true,
-            message: `${data.action} course to employee successfully`,
+            message: `Course to employee successfully`,
           },
           { status: 200 }
         );
@@ -90,7 +90,7 @@ export async function PUT(request: NextRequest) {
         return NextResponse.json(
           {
             success: false,
-            message: `${data.action} course to employee failed`,
+            message: `Course to employee failed`,
           },
           { status: 500 }
         );

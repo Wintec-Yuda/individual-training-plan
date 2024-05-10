@@ -1,6 +1,5 @@
 import { collection, getDocs, getFirestore, doc, getDoc, addDoc, updateDoc, query, where } from "firebase/firestore";
 import app from "./init";
-import { log } from "util";
 
 const firestore = getFirestore(app);
 
@@ -52,12 +51,12 @@ export async function getDataByField(collectionName: string, fieldName: string, 
   }
 }
 
-export async function manageCoursesEmployee(nik: string, codes: string[], action: "list" | "register") {
+export async function manageCoursesEmployee(data: any) {
   try {
     const courseRef = collection(firestore, "courses");
     const updatePromises: any = [];
 
-    for (const code of codes) {
+    for (const code of data.codes) {
       const coursesQuery = query(courseRef, where("code", "==", code));
       const coursesSnapshot = await getDocs(coursesQuery);
 
@@ -65,10 +64,20 @@ export async function manageCoursesEmployee(nik: string, codes: string[], action
         const courseData = courseDoc.data();
         const updatedEmployees = { ...courseData.employees };
 
-        if (action === "register") {
-          updatedEmployees[nik].isSubmit = true;
-        } else if (action === "list") {
-          updatedEmployees[nik] = { isSubmit: false };
+        if (data.action === "register") {
+          updatedEmployees[data.nik].isSubmit = true;
+        } else if (data.action === "list") {
+          updatedEmployees[data.nik] = {
+            name: data.name,
+            isSubmit: false,
+            golongan: data.golongan,
+            empccname: data.empccname,
+            approve: data.golongan === "5" ? 2 : 1,
+          };
+        } else if (data.action === "approve") {
+          data.nikApproves.forEach((nik: string) => {
+            updatedEmployees[nik].approve = (updatedEmployees[nik].approve || 0) + 1;
+          });
         }
 
         const courseDocRef = doc(firestore, "courses", courseDoc.id);

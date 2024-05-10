@@ -49,11 +49,11 @@ const handler = NextAuth({
     async session({ session, token }: any) {
       const keys = ["id", "nik", "name", "jobTtlName", "golongan", "superiorNIK"];
 
-      for (const key of keys) {
+      keys.forEach((key: any) => {
         if (key in token) {
           session.user[key] = token[key];
         }
-      }
+      });
       const accessToken = jwt.sign(token, process.env.NEXTAUTH_SECRET || "", {
         algorithm: "HS256",
       });

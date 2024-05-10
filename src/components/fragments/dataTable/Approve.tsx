@@ -9,10 +9,10 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { DropdownMenu, DropdownMenuCheckboxItem, DropdownMenuContent, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { Input } from "@/components/ui/input";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { errorAlert, successAlert } from "@/utils/sweetalert";
-import { useSelector } from "react-redux";
-import coursesInstance from "@/instances/courses";
 import { useSession } from "next-auth/react";
+import coursesInstance from "@/instances/courses";
+import { useSelector } from "react-redux";
+import { errorAlert, successAlert } from "@/utils/sweetalert";
 
 export const columns: ColumnDef<any>[] = [
   {
@@ -23,16 +23,18 @@ export const columns: ColumnDef<any>[] = [
     enableHiding: false,
   },
   {
-    accessorKey: "code",
-    header: "Code",
-    cell: ({ row }) => <div className="capitalize">{row.getValue("code")}</div>,
+    accessorKey: "nik",
+    header: () => <div>NIK Employee</div>,
+    cell: ({ row }) => {
+      return <div className="font-medium">{row.getValue("nik")}</div>;
+    },
   },
   {
     accessorKey: "name",
     header: ({ column }) => {
       return (
         <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}>
-          Name
+          Name Employee
           <ArrowUpDown className="ml-2 h-4 w-4" />
         </Button>
       );
@@ -40,28 +42,40 @@ export const columns: ColumnDef<any>[] = [
     cell: ({ row }) => <div className="lowercase">{row.getValue("name")}</div>,
   },
   {
-    accessorKey: "target",
-    header: () => <div>Target</div>,
+    accessorKey: "codeCourse",
+    header: () => <div>Code Course</div>,
     cell: ({ row }) => {
-      return <div className="font-medium">{row.getValue("target")}</div>;
+      return <div className="font-medium">{row.getValue("codeCourse")}</div>;
     },
   },
   {
-    accessorKey: "duration",
-    header: () => <div>Duration</div>,
+    accessorKey: "nameCourse",
+    header: ({ column }) => {
+      return (
+        <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}>
+          Name Course
+          <ArrowUpDown className="ml-2 h-4 w-4" />
+        </Button>
+      );
+    },
+    cell: ({ row }) => <div className="lowercase">{row.getValue("nameCourse")}</div>,
+  },
+  {
+    accessorKey: "approve",
+    header: () => <div>Approve</div>,
     cell: ({ row }) => {
-      return <div className="font-medium">{row.getValue("duration")}</div>;
+      return <div className="font-medium">{row.getValue("approve")}</div>;
     },
   },
 ];
 
-export function CourseDataTable({ data, isCourses }: any) {
+export function ApproveDataTable({ data }: any) {
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([]);
   const [columnVisibility, setColumnVisibility] = React.useState<VisibilityState>({});
   const [rowSelection, setRowSelection] = React.useState({});
   const [isLoading, setIsLoading] = React.useState(false);
-  
+
   const user = useSelector((state: any) => state.user.data);
   const table = useReactTable({
     data,
@@ -92,19 +106,20 @@ export function CourseDataTable({ data, isCourses }: any) {
   }
   const token = session.data?.token;
 
-  const handleClick = async (type: string) => {
+  const handleClick = async () => {
     setIsLoading(true);
     try {
       const selectedCourses = Object.keys(rowSelection).map((key) => data.find((item: any, index: number) => index === parseInt(key)));
 
       const selectedData: any = {
-        codes: selectedCourses.map((item: any) => item.code),
+        codes: selectedCourses.map((item: any) => item.codeCourse),
         nik: user.nik,
+        nikApproves: selectedCourses.map((item: any) => item.nik),
         name: user.name,
         golongan: user.golongan,
         empccname: user.empccname,
         superiorNIK: user.superiorNIK,
-        action: type,
+        action: "approve",
       };
 
       const response = await coursesInstance.manageCoursesEmployee(selectedData, token);
@@ -185,19 +200,15 @@ export function CourseDataTable({ data, isCourses }: any) {
         </div>
       </div>
       <div className="flex pb-2">
-        {["list", "register"].map(
-          (type: string) =>
-            isCourses === type &&
-            (isLoading ? (
-              <Button disabled>
-                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                Please wait
-              </Button>
-            ) : (
-              <Button key={type} onClick={() => handleClick(type)} className={`bg-green-600 hover:bg-green-800`}>
-                {type === "list" ? "Register Courses" : "Submit Courses"}
-              </Button>
-            ))
+        {isLoading ? (
+          <Button disabled>
+            <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+            Please wait
+          </Button>
+        ) : (
+          <Button onClick={() => handleClick()} className={`bg-green-600 hover:bg-green-800`}>
+            Approve
+          </Button>
         )}
       </div>
     </div>
