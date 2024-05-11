@@ -16,7 +16,7 @@ const CourseDetail = ({ code }: { code: string }) => {
     <div>
       <Card>
         <CardContent>
-          <div className="grid grid-cols-2 gap-2">
+          <div className="grid sm:grid-cols-2 gap-2">
             <Content>
               <p className="font-bold">Code:</p>
               <p>{data.data[0].code}</p>

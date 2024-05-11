@@ -11,7 +11,6 @@ import { Input } from "@/components/ui/input";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { useSession } from "next-auth/react";
 import { useDispatch, useSelector } from "react-redux";
-import { errorAlert } from "@/utils/sweetalert";
 import { HoverCard, HoverCardContent, HoverCardTrigger } from "@/components/ui/hover-card";
 import { Badge } from "@/components/ui/badge";
 import EmployeeDetail from "../details/Employee";
