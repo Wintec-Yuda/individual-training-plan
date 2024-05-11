@@ -123,17 +123,16 @@ export function RealizationDataTable({ data }: any) {
   const token = session.data?.token;
 
   const handleClick = async () => {
-    setIsLoading(true);
-    try {
-      const selectedCourses = Object.keys(rowSelection).map((key) => data.find((item: any, index: number) => index === parseInt(key)));
-
-      console.log(selectedCourses);
-    } catch (error: any) {
-      errorAlert(error.response.data.message);
-    } finally {
-      setIsLoading(false);
-      setRowSelection({});
-    }
+    // setIsLoading(true);
+    // try {
+    //   const selectedCourses = Object.keys(rowSelection).map((key) => data.find((item: any, index: number) => index === parseInt(key)));
+    //   console.log(selectedCourses);
+    // } catch (error: any) {
+    //   errorAlert(error.response.data.message);
+    // } finally {
+    //   setIsLoading(false);
+    //   setRowSelection({});
+    // }
   };
 
   return (

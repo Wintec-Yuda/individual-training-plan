@@ -59,7 +59,7 @@ const LoginView = () => {
             render={({ field }) => {
               return (
                 <FormItem>
-                  <FormLabel>User principal name</FormLabel>
+                  <FormLabel>SAM Account Name</FormLabel>
                   <FormControl>
                     <Input type="text" className="font-semibold" {...field} />
                   </FormControl>

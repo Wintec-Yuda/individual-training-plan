@@ -18,6 +18,8 @@ import { HoverCard, HoverCardContent, HoverCardTrigger } from "@/components/ui/h
 import { Badge } from "@/components/ui/badge";
 import EmployeeDetail from "../details/Employee";
 import CourseDetail from "../details/Course";
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { Textarea } from "@/components/ui/textarea";
 
 export const columns: ColumnDef<any>[] = [
   {
@@ -98,6 +100,7 @@ export function ApproveDataTable({ data }: any) {
   const [columnVisibility, setColumnVisibility] = React.useState<VisibilityState>({});
   const [rowSelection, setRowSelection] = React.useState({});
   const [isLoading, setIsLoading] = React.useState(false);
+  const [message, setMessage] = React.useState("");
 
   const dispatch = useDispatch();
 
@@ -131,9 +134,11 @@ export function ApproveDataTable({ data }: any) {
   }
   const token = session.data?.token;
 
-  const handleClick = async () => {
-    const confirmed: boolean = await confirmAlert("Are you sure you want process this course?");
-    if (!confirmed) return;
+  const handleClick = async (type: string) => {
+    if (type === "approve") {
+      const confirmed: boolean = await confirmAlert(`Are you sure you want process ${type} this courses?`);
+      if (!confirmed) return;
+    }
     setIsLoading(true);
     try {
       const selectedCourses = Object.keys(rowSelection).map((key) => data.find((item: any, index: number) => index === parseInt(key)));
@@ -146,8 +151,10 @@ export function ApproveDataTable({ data }: any) {
         golongan: user.golongan,
         empccname: user.empccname,
         superiorNIK: user.superiorNIK,
-        action: "approve",
+        action: type,
       };
+
+      if (type === "reject") selectedData.message = message;
 
       const response = await coursesInstance.manageCoursesEmployee(selectedData, token);
       const approveData = {
@@ -231,16 +238,50 @@ export function ApproveDataTable({ data }: any) {
           </Button>
         </div>
       </div>
-      <div className="flex pb-2">
+      <div className="flex pb-2 gap-4">
         {isLoading ? (
           <Button disabled>
             <Loader2 className="mr-2 h-4 w-4 animate-spin" />
             Please wait
           </Button>
         ) : (
-          <Button onClick={() => handleClick()} className={`bg-green-600 hover:bg-green-800`}>
+          <Button onClick={() => handleClick("approve")} className="bg-green-600 hover:bg-green-800">
             Approve
           </Button>
+        )}
+        {isLoading ? (
+          <Button disabled>
+            <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+            Please wait
+          </Button>
+        ) : (
+          <Dialog>
+            <DialogTrigger>
+              <Button onClick={() => setMessage("")} className="bg-red-600 hover:bg-red-800">
+                Reject
+              </Button>
+            </DialogTrigger>
+            <DialogContent>
+              <DialogHeader>
+                <DialogTitle>Give a reason for rejection!</DialogTitle>
+                <DialogDescription>
+                  <div className="grid w-full gap-2">
+                    <Textarea className="text-black" placeholder="Type your message here..." value={message} onChange={(event) => setMessage(event.target.value)} />
+                    {isLoading ? (
+                      <Button disabled>
+                        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                        Please wait
+                      </Button>
+                    ) : (
+                      <Button onClick={() => handleClick("reject")} className="bg-red-600 hover:bg-red-800">
+                        Send message
+                      </Button>
+                    )}
+                  </div>
+                </DialogDescription>
+              </DialogHeader>
+            </DialogContent>
+          </Dialog>
         )}
       </div>
     </div>

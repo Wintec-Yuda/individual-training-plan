@@ -65,9 +65,9 @@ export async function manageCoursesEmployee(data: any) {
         const courseData = courseDoc.data();
         const updatedEmployees = { ...courseData.employees };
 
-        if (data.action === "register") {
+        if (data.action === "submit") {
           updatedEmployees[data.nik].isSubmit = true;
-        } else if (data.action === "list") {
+        } else if (data.action === "register") {
           updatedEmployees[data.nik] = {
             name: data.name,
             isSubmit: false,
@@ -81,6 +81,10 @@ export async function manageCoursesEmployee(data: any) {
           } else {
             updatedEmployees[data.nikApproves[i]].approve = (updatedEmployees[data.nikApproves[i]].approve || 0) + 1;
           }
+          i++;
+        } else if (data.action === "reject") {
+          updatedEmployees[data.nikApproves[i]].isSubmit = false;
+          updatedEmployees[data.nikApproves[i]].message = data.message;
           i++;
         }
 

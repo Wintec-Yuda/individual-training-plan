@@ -32,8 +32,6 @@ const RealizationPage = () => {
       return employeesWithApprove5;
     });
 
-    console.log("realizationCourses", realizationCourses);
-
     dispatch(setRealizationCourses(realizationCourses));
   }
   return isLoading ? (

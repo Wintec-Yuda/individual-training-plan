@@ -48,6 +48,13 @@ export const columns: ColumnDef<any>[] = [
     },
   },
   {
+    accessorKey: "category",
+    header: () => <div>Category</div>,
+    cell: ({ row }) => {
+      return <div className="font-medium">{row.getValue("category")}</div>;
+    },
+  },
+  {
     accessorKey: "duration",
     header: () => <div>Duration</div>,
     cell: ({ row }) => {
@@ -96,7 +103,7 @@ export function CourseDataTable({ data, isCourses }: any) {
   const token = session.data?.token;
 
   const handleClick = async (type: string) => {
-    const confirmed: boolean = await confirmAlert("Are you sure you want process this course?");
+    const confirmed: boolean = await confirmAlert(`Are you sure you want ${type} this courses?`);
     if (!confirmed) return;
     setIsLoading(true);
     try {
@@ -116,7 +123,7 @@ export function CourseDataTable({ data, isCourses }: any) {
 
       successAlert(response.data.message);
 
-      if (type === "list") {
+      if (type === "register") {
         const employees = selectedData.codes.reduce((acc: any, code: string) => {
           acc[user.nik] = { isSubmit: false };
           return acc;
@@ -127,7 +134,7 @@ export function CourseDataTable({ data, isCourses }: any) {
           employees,
         };
         dispatch(registerCourses(registerData));
-      } else if (type === "register") {
+      } else if (type === "submit") {
         const registerData = {
           codes: selectedData.codes,
           nik: user.nik,
@@ -210,7 +217,7 @@ export function CourseDataTable({ data, isCourses }: any) {
         </div>
       </div>
       <div className="flex pb-2">
-        {["list", "register"].map(
+        {["register", "submit"].map(
           (type: string) =>
             isCourses === type &&
             (isLoading ? (
@@ -219,8 +226,8 @@ export function CourseDataTable({ data, isCourses }: any) {
                 Please wait
               </Button>
             ) : (
-              <Button key={type} onClick={() => handleClick(type)} className={`bg-green-600 hover:bg-green-800`}>
-                {type === "list" ? "Register Courses" : "Submit Courses"}
+              <Button key={type} onClick={() => handleClick(type)} className="bg-green-600 hover:bg-green-800">
+                {type === "register" ? "Register Courses" : "Submit Courses"}
               </Button>
             ))
         )}
