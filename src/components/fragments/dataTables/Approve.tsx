@@ -12,7 +12,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { useSession } from "next-auth/react";
 import coursesInstance from "@/instances/courses";
 import { useDispatch, useSelector } from "react-redux";
-import { errorAlert, successAlert } from "@/utils/sweetalert";
+import { confirmAlert, errorAlert, successAlert } from "@/utils/sweetalert";
 import { approveCourses } from "@/store/slices/courses";
 import { HoverCard, HoverCardContent, HoverCardTrigger } from "@/components/ui/hover-card";
 import { Badge } from "@/components/ui/badge";
@@ -132,6 +132,8 @@ export function ApproveDataTable({ data }: any) {
   const token = session.data?.token;
 
   const handleClick = async () => {
+    const confirmed: boolean = await confirmAlert("Are you sure you want process this course?");
+    if (!confirmed) return;
     setIsLoading(true);
     try {
       const selectedCourses = Object.keys(rowSelection).map((key) => data.find((item: any, index: number) => index === parseInt(key)));

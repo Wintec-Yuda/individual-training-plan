@@ -82,7 +82,7 @@ export async function PUT(request: NextRequest) {
         return NextResponse.json(
           {
             success: true,
-            message: `Course to employee successfully`,
+            message: "Manage course to employee successfully",
           },
           { status: 200 }
         );
@@ -90,7 +90,7 @@ export async function PUT(request: NextRequest) {
         return NextResponse.json(
           {
             success: false,
-            message: `Course to employee failed`,
+            message: "Manage course to employee failed",
           },
           { status: 500 }
         );

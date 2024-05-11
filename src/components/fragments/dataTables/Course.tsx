@@ -9,7 +9,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { DropdownMenu, DropdownMenuCheckboxItem, DropdownMenuContent, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { Input } from "@/components/ui/input";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { errorAlert, successAlert } from "@/utils/sweetalert";
+import { confirmAlert, errorAlert, successAlert } from "@/utils/sweetalert";
 import { useDispatch, useSelector } from "react-redux";
 import coursesInstance from "@/instances/courses";
 import { useSession } from "next-auth/react";
@@ -96,6 +96,8 @@ export function CourseDataTable({ data, isCourses }: any) {
   const token = session.data?.token;
 
   const handleClick = async (type: string) => {
+    const confirmed: boolean = await confirmAlert("Are you sure you want process this course?");
+    if (!confirmed) return;
     setIsLoading(true);
     try {
       const selectedCourses = Object.keys(rowSelection).map((key) => data.find((item: any, index: number) => index === parseInt(key)));

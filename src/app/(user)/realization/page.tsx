@@ -17,14 +17,17 @@ const RealizationPage = () => {
   if (!isLoading) {
     dispatch(setCourses(data?.data));
     const realizationCourses = courses.flatMap((course: any) => {
-      const employeesWithApprove5 = Object.entries(course.employees)
-        .filter(([nik, employee]: [string, any]) => employee.approve === 5)
-        .map(([nik, employee]: [string, any]) => ({
-          nik: nik,
-          name: employee.name,
-          codeCourse: course.code,
-          nameCourse: course.name,
-        }));
+      const employeesWithApprove5 =
+        typeof course.employees === "object" && course.employees !== null
+          ? Object.entries(course.employees)
+              .filter(([nik, employee]: [string, any]) => employee.approve === 5)
+              .map(([nik, employee]: [string, any]) => ({
+                nik: nik,
+                name: employee.name,
+                codeCourse: course.code,
+                nameCourse: course.name,
+              }))
+          : [];
 
       return employeesWithApprove5;
     });

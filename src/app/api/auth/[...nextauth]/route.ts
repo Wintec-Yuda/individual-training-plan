@@ -17,8 +17,7 @@ const handler = NextAuth({
         userPrincipalName: {},
       },
       async authorize(credentials) {
-        //
-        const response = await getDataByField("employees", "userPrincipalName", credentials?.userPrincipalName || "");
+        const response = await getDataByField("employees", "samAccountName", credentials?.userPrincipalName || "");
         const user: any = response[0];
 
         return {
