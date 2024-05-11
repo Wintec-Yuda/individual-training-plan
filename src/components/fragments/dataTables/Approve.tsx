@@ -14,6 +14,10 @@ import coursesInstance from "@/instances/courses";
 import { useDispatch, useSelector } from "react-redux";
 import { errorAlert, successAlert } from "@/utils/sweetalert";
 import { approveCourses } from "@/store/slices/courses";
+import { HoverCard, HoverCardContent, HoverCardTrigger } from "@/components/ui/hover-card";
+import { Badge } from "@/components/ui/badge";
+import EmployeeDetail from "../details/Employee";
+import CourseDetail from "../details/Course";
 
 export const columns: ColumnDef<any>[] = [
   {
@@ -27,7 +31,16 @@ export const columns: ColumnDef<any>[] = [
     accessorKey: "nik",
     header: () => <div>NIK Employee</div>,
     cell: ({ row }) => {
-      return <div className="font-medium">{row.getValue("nik")}</div>;
+      return (
+        <HoverCard>
+          <HoverCardTrigger>
+            <Badge className="font-medium cursor-pointer">{row.getValue("nik")}</Badge>
+          </HoverCardTrigger>
+          <HoverCardContent className="w-[30rem]">
+            <EmployeeDetail nik={row.getValue("nik")} />
+          </HoverCardContent>
+        </HoverCard>
+      );
     },
   },
   {
@@ -46,7 +59,16 @@ export const columns: ColumnDef<any>[] = [
     accessorKey: "codeCourse",
     header: () => <div>Code Course</div>,
     cell: ({ row }) => {
-      return <div className="font-medium">{row.getValue("codeCourse")}</div>;
+      return (
+        <HoverCard>
+          <HoverCardTrigger>
+            <Badge className="font-medium cursor-pointer">{row.getValue("codeCourse")}</Badge>
+          </HoverCardTrigger>
+          <HoverCardContent className="w-[30rem]">
+            <CourseDetail code={row.getValue("codeCourse")} />
+          </HoverCardContent>
+        </HoverCard>
+      );
     },
   },
   {

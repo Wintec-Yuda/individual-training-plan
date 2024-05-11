@@ -1,5 +1,5 @@
 import { useSelector } from "react-redux";
-import { ApproveDataTable } from "../fragments/dataTable/Approve";
+import { ApproveDataTable } from "../fragments/dataTables/Approve";
 import { useSession } from "next-auth/react";
 import { Loader2 } from "lucide-react";
 import { IEmployee } from "@/interfaces";
@@ -7,7 +7,7 @@ import { IEmployee } from "@/interfaces";
 const ApproveView = () => {
   const registeredCourses = useSelector((state: any) => state.registeredCourses.data);
   const approves = useSelector((state: any) => state.approves.data);
-  
+
   const session: any = useSession();
   if (session.status === "loading") {
     return (
@@ -57,7 +57,7 @@ const ApproveView = () => {
   return (
     <div className="bg-emerald-50 rounded-lg p-4">
       <h1 className="text-2xl font-bold">Approve Submitted Courses</h1>
-      <ApproveDataTable data={submittedCourses} />;
+      <ApproveDataTable data={submittedCourses} />
     </div>
   );
 };

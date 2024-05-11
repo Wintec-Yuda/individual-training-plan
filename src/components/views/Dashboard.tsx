@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { Button } from "../ui/button";
-import { EmployeeDataTable } from "../fragments/dataTable/Employee";
+import { EmployeeDataTable } from "../fragments/dataTables/Employee";
 import { useSelector } from "react-redux";
 import { useSession } from "next-auth/react";
 import { Loader2 } from "lucide-react";

@@ -1,5 +1,5 @@
 import { useSelector } from "react-redux";
-import { RealizationDataTable } from "../fragments/dataTable/Realization";
+import { RealizationDataTable } from "../fragments/dataTables/Realization";
 
 const RealizationView = () => {
   const realizationCourses = useSelector((state: any) => state.realizationCourses.data);
