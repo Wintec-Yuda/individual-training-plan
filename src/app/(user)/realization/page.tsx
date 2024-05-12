@@ -17,7 +17,7 @@ const RealizationPage = () => {
   if (!isLoading) {
     dispatch(setCourses(data?.data));
     const realizationCourses = courses.filter((course: any) => {
-      if (course.employees.approve === 5) {
+      if (course.employees?.approve === 5) {
         return {
           nik: course.employees.nik,
           name: course.employees.name,

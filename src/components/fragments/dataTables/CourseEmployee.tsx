@@ -14,6 +14,7 @@ import { useDispatch, useSelector } from "react-redux";
 import coursesInstance from "@/instances/courses";
 import { useSession } from "next-auth/react";
 import { registerCourses, submitCourses, unregisterCourses } from "@/store/slices/courses";
+import { Badge } from "@/components/ui/badge";
 
 export const columns: ColumnDef<any>[] = [
   {
@@ -52,7 +53,11 @@ export const columns: ColumnDef<any>[] = [
     header: () => <div>Category</div>,
     cell: ({ row }) => {
       const categories: any = row.getValue("categories");
-      return <div className="font-medium">{categories.join(" | ")}</div>;
+      return <div className="font-medium">
+        {categories.map((category: any) => (
+          <Badge key={category}>{category}</Badge>
+        ))}
+      </div>;
     },
   },
   {
@@ -64,7 +69,7 @@ export const columns: ColumnDef<any>[] = [
   },
 ];
 
-export function CourseDataTable({ data, isCourses }: any) {
+export function CourseEmployeeDataTable({ data, isCourses }: any) {
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([]);
   const [columnVisibility, setColumnVisibility] = React.useState<VisibilityState>({});

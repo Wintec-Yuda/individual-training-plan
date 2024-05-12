@@ -1,7 +1,7 @@
 "use client";
 
 import { useSelector } from "react-redux";
-import { CourseDataTable } from "../fragments/dataTables/Course";
+import { CourseEmployeeDataTable } from "../fragments/dataTables/CourseEmployee";
 import { IoArrowBackCircle } from "react-icons/io5";
 import { FaHistory } from "react-icons/fa";
 import Link from "next/link";
@@ -75,7 +75,7 @@ const RegistrationView = () => {
             </CheckDialog>
           </div>
         )}
-        <CourseDataTable
+        <CourseEmployeeDataTable
           data={courses.filter((course: any) => {
             if (isCourses === "register") {
               const isRegister = Array.isArray(course?.employees) && course.employees.some((employee: any) => employee && employee.nik === user.nik);
