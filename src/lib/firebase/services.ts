@@ -1,5 +1,6 @@
 import { collection, getDocs, getFirestore, doc, getDoc, addDoc, updateDoc, query, where } from "firebase/firestore";
 import app from "./init";
+import { formatDate } from "@/utils";
 
 const firestore = getFirestore(app);
 
@@ -56,7 +57,7 @@ export async function manageCoursesEmployee(data: any) {
     const courseRef = collection(firestore, "courses");
     const updatePromises: any = [];
 
-    for (let i = 0; i < data.nikApproves.length; i++) {
+    for (let i = 0; i < data.codes.length; i++) {
       const coursesQuery = query(courseRef, where("code", "==", data.codes[i]));
       const coursesSnapshot = await getDocs(coursesQuery);
 
@@ -83,6 +84,7 @@ export async function manageCoursesEmployee(data: any) {
               nik: data.nik,
               name: data.name,
               approve: employee.approve,
+              date: formatDate(new Date()),
             };
             if (employee.nik === data.nikApproves[i]) {
               if (["1", "2", "3"].includes(employee.golongan) && employee.approve === 2) {
@@ -106,6 +108,7 @@ export async function manageCoursesEmployee(data: any) {
                 nik: data.nik,
                 name: data.name,
                 message: data.message,
+                date: formatDate(new Date()),
               };
               if (employee.rejects) {
                 employee.push(reject);

@@ -13,7 +13,7 @@ export const greeting = () => {
   }
 };
 
-const formatDate = (dateString: string) => {
+export const formatDate = (dateString: any) => {
   const date = new Date(dateString);
 
   let day: string | number = date.getDate();

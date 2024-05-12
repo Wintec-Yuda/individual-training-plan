@@ -43,7 +43,7 @@ const RegistrationView = () => {
                 data={courses
                   .filter((course: any) => {
                     return course.employees?.some((employee: any) => {
-                      return employee.nik === user.nik && employee.isSubmit === false;
+                      return employee.nik === user.nik && employee.isSubmit === false && employee.rejects;
                     });
                   })
                   .map((course: any) => {
@@ -63,11 +63,11 @@ const RegistrationView = () => {
                 data={courses
                   .filter((course: any) => {
                     return course.employees?.some((employee: any) => {
-                      return employee.nik === user.nik && employee.isSubmit === false;
+                      return employee.nik === user.nik && employee.isSubmit === true && employee.approvals;
                     });
                   })
                   .map((course: any) => {
-                    const employee = course.employees.find((emp: any) => emp.nik === user.nik && emp.isSubmit === false);
+                    const employee = course.employees.find((emp: any) => emp.nik === user.nik && emp.isSubmit === true);
                     return { code: course.code, approve: employee.approve, approvals: employee.approvals };
                   })}
                 status="approve"
@@ -137,7 +137,7 @@ const CourseStatusList = ({ data, status }: any) => {
                   <FaHistory />
                 </div>
               </HoverCardTrigger>
-              <HoverCardContent className="w-[30rem]">
+              <HoverCardContent className="w-[50rem]">
                 {status === "approve" ? (
                   <div className="grid w-full gap-2">
                     {course.approvals?.map((approval: any) => (
@@ -155,6 +155,9 @@ const CourseStatusList = ({ data, status }: any) => {
                         </div>
                         <div className="border-l-2 border-black">
                           <p className="ms-2">Approve {approval.approve}</p>
+                        </div>
+                        <div className="border-l-2 border-black">
+                          <p className="ms-2">{approval.date}</p>
                         </div>
                       </div>
                     ))}
@@ -176,6 +179,9 @@ const CourseStatusList = ({ data, status }: any) => {
                         </div>
                         <div className="border-l-2 border-black">
                           <p className="ms-2">{reject.message}</p>
+                        </div>
+                        <div className="border-l-2 border-black">
+                          <p className="ms-2">{reject.date}</p>
                         </div>
                       </div>
                     ))}
