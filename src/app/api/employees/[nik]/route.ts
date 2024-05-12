@@ -2,8 +2,9 @@ import { getDataByField } from "@/lib/firebase/services";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(request: NextRequest) {
-  const nik: any = request.url.split("/").pop();
   try {
+    const nik: any = request.url.split("/").pop();
+    
     const data = await getDataByField("employees", "nik", nik);
     return NextResponse.json(
       {

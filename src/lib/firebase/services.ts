@@ -27,6 +27,16 @@ export async function addData(collectionName: string, data: any) {
   }
 }
 
+export async function editData(collectionName: string, id: string, newData: any) {
+  try {
+    const docRef = doc(firestore, collectionName, id);
+    await updateDoc(docRef, newData);
+    return true;
+  } catch (error) {
+    return false;
+  }
+}
+
 export async function getDataById(collectionName: string, id: string) {
   try {
     const snapshot = await getDoc(doc(firestore, collectionName, id));

@@ -10,6 +10,9 @@ import { DropdownMenu, DropdownMenuCheckboxItem, DropdownMenuContent, DropdownMe
 import { Input } from "@/components/ui/input";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
+import { FaEdit } from "react-icons/fa";
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { CourseForm } from "../form/Course";
 
 export const columns: ColumnDef<any>[] = [
   {
@@ -80,9 +83,32 @@ export const columns: ColumnDef<any>[] = [
   },
   {
     accessorKey: "isActive",
-    header: () => <div>Active</div>,
+    header: () => <div>Status</div>,
     cell: ({ row }) => {
       return <div className="font-medium">{row.getValue("isActive") ? "Active" : "Inactive"}</div>;
+    },
+  },
+  {
+    accessorKey: "action",
+    header: () => <div>Edit</div>,
+    cell: ({ row }) => {
+      return (
+        <Dialog>
+          <DialogTrigger>
+            <FaEdit className="cursor-pointer text-2xl text-blue-600 hover:text-blue-800" />
+          </DialogTrigger>
+          <DialogContent className="bg-transparent backdrop-blur-xl">
+            <DialogHeader>
+              <DialogTitle className="text-center text-white">Add course Data</DialogTitle>
+              <DialogDescription>
+                <div className="grid w-full">
+                  <CourseForm data={row.original} />
+                </div>
+              </DialogDescription>
+            </DialogHeader>
+          </DialogContent>
+        </Dialog>
+      );
     },
   },
 ];

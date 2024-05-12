@@ -15,7 +15,7 @@ import { useSession } from "next-auth/react";
 import { Loader2 } from "lucide-react";
 import coursesInstance from "@/instances/courses";
 import { errorAlert, successAlert } from "@/utils/sweetalert";
-import { addCourses } from "@/store/slices/courses";
+import { addCourse, editCourse } from "@/store/slices/courses";
 import { useDispatch } from "react-redux";
 
 const formSchema = z.object({
@@ -32,19 +32,26 @@ const formSchema = z.object({
   isActive: z.boolean().optional(),
 });
 
-export function CourseForm() {
+export function CourseForm({ data }: any) {
   const [loading, setLoading] = useState(false);
+
+  const mutableData = { ...data };
+  if (data) {
+    if (mutableData.categories) {
+      mutableData.categories = mutableData.categories.map((label: string) => getCategoryIdByLabel(label));
+    }
+  }
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      code: "",
-      name: "",
-      golongans: [],
-      categories: [],
-      duration: "",
-      target: "",
-      isActive: true,
+      code: mutableData.code || "",
+      name: mutableData.name || "",
+      golongans: mutableData.golongans || [],
+      categories: mutableData.categories || [],
+      duration: mutableData.duration || "",
+      target: mutableData.target || "",
+      isActive: mutableData.isActive,
     },
   });
 
@@ -61,12 +68,19 @@ export function CourseForm() {
 
   const token: any = session.data?.token;
 
-  async function onSubmit(data: z.infer<typeof formSchema>) {
+  async function onSubmit(values: z.infer<typeof formSchema>) {
     setLoading(true);
+    values.categories = values.categories.map((categoryId) => getCategoryLabelById(categoryId));
     try {
-      const response = await coursesInstance.addCourse(data, token);
-      dispatch(addCourses(data));
-      successAlert(response.data.message);
+      if (data) {
+        const response = await coursesInstance.editCourse(values, data.id, token);
+        dispatch(editCourse(values));
+        successAlert(response.data.message);
+      } else {
+        const response = await coursesInstance.addCourse(values, token);
+        dispatch(addCourse(values));
+        successAlert(response.data.message);
+      }
     } catch (error: any) {
       errorAlert(error.response.data.message);
     } finally {
@@ -225,10 +239,20 @@ export function CourseForm() {
           </Button>
         ) : (
           <Button className="bg-blue-600 hover:bg-blue-800" type="submit">
-            Add Courses
+            {data ? "Edit Data" : "Add Data"}
           </Button>
         )}
       </form>
     </Form>
   );
 }
+
+const getCategoryLabelById = (categoryId: string) => {
+  const category = categoriesList.find((category) => category.id === categoryId);
+  return category ? category.label : "Unknown";
+};
+
+const getCategoryIdByLabel = (label: string) => {
+  const category = categoriesList.find((category) => category.label === label);
+  return category ? category.id : null;
+};

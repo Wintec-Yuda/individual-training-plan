@@ -9,6 +9,10 @@ const coursesInstance = {
     instance.post("/api/courses/", data, {
       headers: { Authorization: `Bearer ${token}` },
     }),
+  editCourse: (data: any, id: string, token: string) =>
+    instance.put(`/api/courses/${id}`, data, {
+      headers: { Authorization: `Bearer ${token}` },
+    }),
 };
 
 export default coursesInstance;

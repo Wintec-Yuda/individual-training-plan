@@ -1,10 +1,10 @@
 export const categoriesList = [
   { id: "1", label: "digital" },
-  { id: "2", label: "Technology" },
-  { id: "3", label: "Business" },
-  { id: "4", label: "Education" },
-  { id: "5", label: "Communication" },
-  { id: "6", label: "Science" },
+  { id: "2", label: "technology" },
+  { id: "3", label: "business" },
+  { id: "4", label: "education" },
+  { id: "5", label: "communication" },
+  { id: "6", label: "science" },
 ];
 export const golongansList = [
   { id: "1", label: "1" },

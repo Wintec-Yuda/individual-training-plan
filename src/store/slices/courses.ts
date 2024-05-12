@@ -9,8 +9,14 @@ const coursesSlice = createSlice({
     setCourses: (state, action) => {
       state.data = action.payload;
     },
-    addCourses: (state, action) => {
+    addCourse: (state, action) => {
       state.data.push(action.payload);
+    },
+    editCourse: (state, action) => {
+      const index = state.data.findIndex((course) => course.code === action.payload.code);
+      if (index !== -1) {
+        state.data[index] = action.payload;
+      }
     },
     registerCourses: (state, action) => {
       const { codes, employee } = action.payload;
@@ -80,5 +86,5 @@ const coursesSlice = createSlice({
   },
 });
 
-export const { setCourses, addCourses, registerCourses, submitCourses, approveCourses, unregisterCourses, realizationCourses } = coursesSlice.actions;
+export const { setCourses, addCourse, editCourse, registerCourses, submitCourses, approveCourses, unregisterCourses, realizationCourses } = coursesSlice.actions;
 export default coursesSlice.reducer;
