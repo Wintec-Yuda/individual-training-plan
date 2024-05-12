@@ -2,7 +2,7 @@
 
 import * as React from "react";
 import { ColumnDef, ColumnFiltersState, SortingState, VisibilityState, flexRender, getCoreRowModel, getFilteredRowModel, getPaginationRowModel, getSortedRowModel, useReactTable } from "@tanstack/react-table";
-import { ArrowUpDown, ChevronDown, Loader2 } from "lucide-react";
+import { ArrowUpDown, ChevronDown } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -41,11 +41,13 @@ export const columns: ColumnDef<any>[] = [
     header: () => <div>Golongan</div>,
     cell: ({ row }) => {
       const golongans: any = row.getValue("golongans");
-      return <div className="font-medium">
-        {golongans.map((golongan: any) => (
-          <Badge key={golongan}>{golongan}</Badge>
-        ))}
-      </div>;
+      return (
+        <div className="font-medium">
+          {golongans.map((golongan: any) => (
+            <Badge key={golongan}>{golongan}</Badge>
+          ))}
+        </div>
+      );
     },
   },
   {
@@ -53,11 +55,13 @@ export const columns: ColumnDef<any>[] = [
     header: () => <div>Category</div>,
     cell: ({ row }) => {
       const categories: any = row.getValue("categories");
-      return <div className="font-medium">
-        {categories.map((category: any) => (
-          <Badge key={category}>{category}</Badge>
-        ))}
-      </div>;
+      return (
+        <div className="font-medium">
+          {categories.map((category: any) => (
+            <Badge key={category}>{category}</Badge>
+          ))}
+        </div>
+      );
     },
   },
   {
@@ -72,6 +76,13 @@ export const columns: ColumnDef<any>[] = [
     header: () => <div>Target</div>,
     cell: ({ row }) => {
       return <div className="font-medium">{row.getValue("target")}</div>;
+    },
+  },
+  {
+    accessorKey: "isActive",
+    header: () => <div>Active</div>,
+    cell: ({ row }) => {
+      return <div className="font-medium">{row.getValue("isActive") ? "Active" : "Inactive"}</div>;
     },
   },
 ];

@@ -9,6 +9,9 @@ const coursesSlice = createSlice({
     setCourses: (state, action) => {
       state.data = action.payload;
     },
+    addCourses: (state, action) => {
+      state.data.push(action.payload);
+    },
     registerCourses: (state, action) => {
       const { codes, employee } = action.payload;
       codes.map((code: string) => {
@@ -77,5 +80,5 @@ const coursesSlice = createSlice({
   },
 });
 
-export const { setCourses, registerCourses, submitCourses, approveCourses, unregisterCourses, realizationCourses } = coursesSlice.actions;
+export const { setCourses, addCourses, registerCourses, submitCourses, approveCourses, unregisterCourses, realizationCourses } = coursesSlice.actions;
 export default coursesSlice.reducer;

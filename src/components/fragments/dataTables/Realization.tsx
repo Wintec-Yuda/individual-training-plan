@@ -95,7 +95,7 @@ const FormSchema = z.object({
   year: z.string({ required_error: "Year is required" }),
 });
 
-export function RealizationDataTable({ data }: any) {
+export function RealizationDataTable({ data, isRealization }: any) {
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([]);
   const [columnVisibility, setColumnVisibility] = React.useState<VisibilityState>({});
@@ -104,6 +104,9 @@ export function RealizationDataTable({ data }: any) {
 
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
+    defaultValues: {
+      year: new Date().getFullYear().toString(),
+    },
   });
 
   const dispatch = useDispatch();
@@ -235,7 +238,7 @@ export function RealizationDataTable({ data }: any) {
           </Button>
         </div>
       </div>
-      <div className="flex pb-2">
+      <div className={`flex pb-2 ${isRealization === "realization" && "hidden"}`}>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="flex gap-4">
             <FormField

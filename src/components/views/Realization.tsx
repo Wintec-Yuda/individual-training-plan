@@ -7,7 +7,7 @@ import { getYears } from "@/utils";
 
 const RealizationView = () => {
   const [isRealization, setIsRealization] = useState("unrealization");
-  const [year, setYear] = useState("");
+  const [year, setYear] = useState(new Date().getFullYear().toString());
 
   const courses = useSelector((state: any) => state.courses.data);
 
@@ -20,7 +20,7 @@ const RealizationView = () => {
         <div className="flex space-x-2">
           <Select onValueChange={(value: any) => setYear(value)}>
             <SelectTrigger>
-              <SelectValue placeholder="Select the year" />
+              <SelectValue placeholder="2024" />
             </SelectTrigger>
             <SelectContent>
               {getYears().map((year: any) => (
@@ -69,6 +69,7 @@ const RealizationView = () => {
           }
           return result;
         }, [])}
+        isRealization={isRealization}
       />
     </div>
   );
