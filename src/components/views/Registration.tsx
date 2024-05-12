@@ -155,7 +155,7 @@ const CourseStatusList = ({ data, status }: any) => {
             <div>{status === "approve" ? `Approve ${course.approve}` : course.message}</div>
             <HoverCard>
               <HoverCardTrigger>
-                <div className={`cursor-pointer rounded-full border border-black rounded-full ${status === "approve" ? "bg-yellow-200 p-2 hover:bg-yellow-400" : "bg-red-200 p-2 hover:bg-red-400"}`}>
+                <div className={`cursor-pointer border border-black rounded-full ${status === "approve" ? "bg-yellow-200 p-2 hover:bg-yellow-400" : "bg-red-200 p-2 hover:bg-red-400"}`}>
                   <FaHistory />
                 </div>
               </HoverCardTrigger>
