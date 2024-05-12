@@ -55,37 +55,65 @@ export async function manageCoursesEmployee(data: any) {
   try {
     const courseRef = collection(firestore, "courses");
     const updatePromises: any = [];
-    let i = 0;
 
-    for (const code of data.codes) {
-      const coursesQuery = query(courseRef, where("code", "==", code));
+    for (let i = 0; i < data.nikApproves.length; i++) {
+      const coursesQuery = query(courseRef, where("code", "==", data.codes[i]));
       const coursesSnapshot = await getDocs(coursesQuery);
 
       coursesSnapshot.forEach((courseDoc) => {
         const courseData = courseDoc.data();
-        const updatedEmployees = { ...courseData.employees };
+        const updatedEmployees = courseData.employees || [];
 
         if (data.action === "submit") {
-          updatedEmployees[data.nik].isSubmit = true;
+          updatedEmployees.map((employee: any) => {
+            if (employee.nik === data.nik) employee.isSubmit = true;
+          });
         } else if (data.action === "register") {
-          updatedEmployees[data.nik] = {
+          updatedEmployees.push({
+            nik: data.nik,
             name: data.name,
             isSubmit: false,
             golongan: data.golongan,
             empccname: data.empccname,
             approve: data.golongan === "5" ? 2 : 1,
-          };
+          });
         } else if (data.action === "approve") {
-          if (["1", "2", "3"].includes(updatedEmployees[data.nikApproves[i]].golongan) && updatedEmployees[data.nikApproves[i]].approve === 2) {
-            updatedEmployees[data.nikApproves[i]].approve = (updatedEmployees[data.nikApproves[i]].approve || 0) + 2;
-          } else {
-            updatedEmployees[data.nikApproves[i]].approve = (updatedEmployees[data.nikApproves[i]].approve || 0) + 1;
-          }
-          i++;
+          updatedEmployees.map((employee: any) => {
+            const approval = {
+              nik: data.nik,
+              name: data.name,
+              approve: employee.approve,
+            };
+            if (employee.nik === data.nikApproves[i]) {
+              if (["1", "2", "3"].includes(employee.golongan) && employee.approve === 2) {
+                employee.approve += 2;
+              } else {
+                employee.approve += 1;
+              }
+              if (employee.approvals) {
+                employee.approvals.push(approval);
+              } else {
+                employee.approvals = [approval];
+              }
+            }
+          });
         } else if (data.action === "reject") {
-          updatedEmployees[data.nikApproves[i]].isSubmit = false;
-          updatedEmployees[data.nikApproves[i]].message = data.message;
-          i++;
+          updatedEmployees.map((employee: any) => {
+            if (employee.nik === data.nikApproves[i]) {
+              employee.isSubmit = false;
+              employee.message = data.message;
+              const reject = {
+                nik: data.nik,
+                name: data.name,
+                message: data.message,
+              };
+              if (employee.rejects) {
+                employee.push(reject);
+              } else {
+                employee.rejects = [reject];
+              }
+            }
+          });
         }
 
         const courseDocRef = doc(firestore, "courses", courseDoc.id);

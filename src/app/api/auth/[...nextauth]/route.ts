@@ -39,6 +39,7 @@ const handler = NextAuth({
         token.name = user.name;
         token.jobTtlName = user.jobTtlName;
         token.golongan = user.golongan;
+        token.empccname = user.empccname;
         token.superiorNIK = user.superiorNIK;
       }
 
@@ -46,9 +47,9 @@ const handler = NextAuth({
     },
 
     async session({ session, token }: any) {
-      const keys = ["id", "nik", "name", "jobTtlName", "golongan", "superiorNIK"];
+      const keys = ["id", "nik", "name", "jobTtlName", "golongan", "empccname", "superiorNIK"];
 
-      keys.forEach((key: any) => {
+      keys.map((key: any) => {
         if (key in token) {
           session.user[key] = token[key];
         }

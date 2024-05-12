@@ -23,15 +23,14 @@ const ApproveView = () => {
 
   const submittedCourses: any = [];
 
-  registeredCourses.forEach((course: any) => {
-    const employees = course.employees;
-    Object.entries<IEmployee>(employees).forEach(([nik, employee]) => {
+  registeredCourses.map((course: any) => {
+    course.employees.map((employee: any) => {
       if (employee.isSubmit) {
-        userApproves.forEach((approval: any) => {
+        userApproves.map((approval: any) => {
           if (approval.empccnames) {
             if (approval.empccnames.includes(employee.empccname) && approval.approve == employee.approve) {
               submittedCourses.push({
-                nik: nik,
+                nik: employee.nik,
                 name: employee.name,
                 approve: employee.approve,
                 codeCourse: course.code,
@@ -41,7 +40,7 @@ const ApproveView = () => {
           } else if (approval.golongans) {
             if (approval.golongans.includes(employee.golongan) && approval.approve == employee.approve) {
               submittedCourses.push({
-                nik: nik,
+                nik: employee.nik,
                 name: employee.name,
                 approve: employee.approve,
                 codeCourse: course.code,

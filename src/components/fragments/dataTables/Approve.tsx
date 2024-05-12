@@ -104,7 +104,6 @@ export function ApproveDataTable({ data }: any) {
 
   const dispatch = useDispatch();
 
-  const user = useSelector((state: any) => state.user.data);
   const table = useReactTable({
     data,
     columns,
@@ -133,6 +132,7 @@ export function ApproveDataTable({ data }: any) {
     );
   }
   const token = session.data?.token;
+  const user = session.data?.user;
 
   const handleClick = async (type: string) => {
     if (type === "approve") {

@@ -36,7 +36,7 @@ const ApprovePage = () => {
 
   if (!isLoading) {
     dispatch(setApproves(data?.data));
-    const registeredCourses = courses.filter((course: any) => course.employees && Object.keys(course.employees).length > 0);
+    const registeredCourses = courses.filter((course: any) => course.employees?.length > 0);
 
     dispatch(setRegisteredCourses(registeredCourses));
   }

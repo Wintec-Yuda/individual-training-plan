@@ -48,10 +48,11 @@ export const columns: ColumnDef<any>[] = [
     },
   },
   {
-    accessorKey: "category",
+    accessorKey: "categories",
     header: () => <div>Category</div>,
     cell: ({ row }) => {
-      return <div className="font-medium">{row.getValue("category")}</div>;
+      const categories: any = row.getValue("categories");
+      return <div className="font-medium">{categories.join(" | ")}</div>;
     },
   },
   {
@@ -124,14 +125,18 @@ export function CourseDataTable({ data, isCourses }: any) {
       successAlert(response.data.message);
 
       if (type === "register") {
-        const employees = selectedData.codes.reduce((acc: any, code: string) => {
-          acc[user.nik] = { isSubmit: false };
-          return acc;
-        }, {});
+        const employee = {
+          nik: user.nik,
+          name: user.name,
+          isSubmit: false,
+          golongan: user.golongan,
+          empccname: user.empccname,
+          approve: user.golongan === "5" ? 2 : 1,
+        };
 
         const registerData = {
           codes: selectedData.codes,
-          employees,
+          employee,
         };
         dispatch(registerCourses(registerData));
       } else if (type === "submit") {
@@ -221,7 +226,7 @@ export function CourseDataTable({ data, isCourses }: any) {
           (type: string) =>
             isCourses === type &&
             (isLoading ? (
-              <Button disabled>
+              <Button key={type} disabled>
                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                 Please wait
               </Button>
