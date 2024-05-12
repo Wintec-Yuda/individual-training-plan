@@ -27,9 +27,9 @@ const RegistrationView = () => {
       </Link>
       <Profile />
       <div className="flex gap-2">
-        {["register", "submit", "submitted"].map((type: string) => (
+        {["register", "submit", "submitted", "realization"].map((type: string) => (
           <Button key={type} onClick={() => setIsCourses(type)} className={`${isCourses === type ? "bg-blue-600" : "bg-white text-black border border-black"} hover:bg-blue-600`}>
-            {type === "register" ? "Courses List" : type === "submit" ? "Registered Courses" : "Submitted Courses"}
+            {type === "register" ? "Courses List" : type === "submit" ? "Registered Courses" : type === "submitted" ? "Submitted Courses" : "Realization Courses"}
           </Button>
         ))}
       </div>
@@ -75,6 +75,25 @@ const RegistrationView = () => {
             </CheckDialog>
           </div>
         )}
+        {isCourses === "realization" && (
+          <div className="flex gap-4">
+            <h1 className="text-2xl font-bold">Realization Course List</h1>
+            <CheckDialog title="Realization Courses List" buttonLabel="Check Realization Courses" className="bg-purple-600 hover:bg-purple-800">
+              <CourseRealizationList
+                data={courses
+                  .filter((course: any) => {
+                    return course.employees?.some((employee: any) => {
+                      return employee.nik === user.nik && employee.isSubmit === true && employee.approvals && employee.yearRealization;
+                    });
+                  })
+                  .map((course: any) => {
+                    const employee = course.employees.find((emp: any) => emp.nik === user.nik && emp.isSubmit === true && emp.yearRealization);
+                    return { code: course.code, year: employee.yearRealization };
+                  })}
+              />
+            </CheckDialog>
+          </div>
+        )}
         <CourseEmployeeDataTable
           data={courses.filter((course: any) => {
             if (isCourses === "register") {
@@ -84,7 +103,10 @@ const RegistrationView = () => {
               const isRegister = Array.isArray(course?.employees) && course.employees.some((employee: any) => employee && employee.nik === user.nik && employee.isSubmit === false);
               return isRegister;
             } else if (isCourses === "submitted") {
-              const isSubmit = Array.isArray(course?.employees) && course.employees.some((employee: any) => employee && employee.nik === user.nik && employee.isSubmit === true);
+              const isSubmit = Array.isArray(course?.employees) && course.employees.some((employee: any) => employee && employee.nik === user.nik && employee.isSubmit === true && !employee.yearRealization);
+              return isSubmit;
+            } else if (isCourses === "realization") {
+              const isSubmit = Array.isArray(course?.employees) && course.employees.some((employee: any) => employee && employee.nik === user.nik && employee.isSubmit === true && employee.yearRealization);
               return isSubmit;
             }
             return false;
@@ -118,7 +140,7 @@ const CheckDialog = ({ title, buttonLabel, className, children }: any) => {
 
 const CourseStatusList = ({ data, status }: any) => {
   return (
-    <div className="grid sm:grid-cols-2 gap-2 mt-2">
+    <div className="grid sm:grid-cols-2 gap-4 mt-2">
       {data.map((course: any) => (
         <div key={course.code} className="text-center">
           <HoverCard>
@@ -190,6 +212,26 @@ const CourseStatusList = ({ data, status }: any) => {
               </HoverCardContent>
             </HoverCard>
           </div>
+        </div>
+      ))}
+    </div>
+  );
+};
+
+const CourseRealizationList = ({ data }: any) => {
+  return (
+    <div className="grid sm:grid-cols-2 gap-4 mt-2">
+      {data.map((course: any) => (
+        <div key={course.code} className="text-center">
+          <HoverCard>
+            <HoverCardTrigger>
+              <Badge className="font-medium cursor-pointer">{course.code}</Badge>
+            </HoverCardTrigger>
+            <HoverCardContent className="w-[30rem]">
+              <CourseDetail code={course.code} />
+            </HoverCardContent>
+          </HoverCard>
+          <div className="mt-2 p-2 flex gap-2 justify-center items-center rounded border border-black bg-purple-100 text-black">Realization in {course.year}</div>
         </div>
       ))}
     </div>

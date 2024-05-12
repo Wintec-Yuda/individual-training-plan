@@ -27,7 +27,7 @@ const CourseDetail = ({ code }: { code: string }) => {
             </Content>
             <Content>
               <p className="font-bold">Category:</p>
-              <p>{data.data[0].category}</p>
+              <p>{data.data[0].categories.join(" | ")}</p>
             </Content>
             <Content>
               <p className="font-bold">Duration:</p>

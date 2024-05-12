@@ -49,3 +49,15 @@ export const calculateYearsSince = (date: string) => {
 
   return [formatDate(date), years, months];
 };
+
+export const getYears = () => {
+  const now = new Date();
+  const currentYear = now.getFullYear();
+  const years: any = [];
+
+  for (let i = 0; i <= 4; i++) {
+    years.push((currentYear + i).toString());
+  }
+
+  return years;
+}

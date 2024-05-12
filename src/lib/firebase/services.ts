@@ -121,6 +121,12 @@ export async function manageCoursesEmployee(data: any) {
               }
             }
           });
+        } else if (data.action === "realization") {
+          updatedEmployees.map((employee: any) => {
+            if (employee.nik === data.nikApproves[i]) {
+              employee.yearRealization = data.year;
+            }
+          });
         }
 
         const courseDocRef = doc(firestore, "courses", courseDoc.id);

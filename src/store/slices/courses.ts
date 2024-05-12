@@ -61,8 +61,21 @@ const coursesSlice = createSlice({
         }
       }
     },
+    realizationCourses: (state, action) => {
+      const { codes, nikApproves, year } = action.payload;
+      for (let i = 0; i < nikApproves.length; i++) {
+        const courseIndex = state.data.findIndex((course) => course.code === codes[i]);
+        if (courseIndex !== -1) {
+          state.data[courseIndex].employees.map((employee: any) => {
+            if (employee.nik === nikApproves[i]) {
+              employee.yearRealization = year;
+            }
+          });
+        }
+      }
+    },
   },
 });
 
-export const { setCourses, registerCourses, submitCourses, approveCourses, unregisterCourses } = coursesSlice.actions;
+export const { setCourses, registerCourses, submitCourses, approveCourses, unregisterCourses, realizationCourses } = coursesSlice.actions;
 export default coursesSlice.reducer;

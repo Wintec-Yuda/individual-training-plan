@@ -16,16 +16,24 @@ const RealizationPage = () => {
 
   if (!isLoading) {
     dispatch(setCourses(data?.data));
-    const realizationCourses = courses.filter((course: any) => {
-      if (course.employees?.approve === 5) {
-        return {
-          nik: course.employees.nik,
-          name: course.employees.name,
-          codeCourse: course.code,
-          nameCourse: course.name,
-          }
-        }
-    });
+    const realizationCourses = courses
+      .filter((course: any) => {
+        return course.employees.some((employee: any) => employee.approve === 5);
+      })
+      .map((course: any) => {
+        return course.employees
+          .filter((employee: any) => employee.approve === 5)
+          .map((employee: any) => {
+            return {
+              nik: employee.nik,
+              name: employee.name,
+              yearRealization: employee.yearRealization,
+              codeCourse: course.code,
+              nameCourse: course.name,
+            };
+          });
+      })
+      .flat();
 
     dispatch(setRealizationCourses(realizationCourses));
   }

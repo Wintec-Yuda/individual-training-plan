@@ -15,6 +15,15 @@ import { HoverCard, HoverCardContent, HoverCardTrigger } from "@/components/ui/h
 import { Badge } from "@/components/ui/badge";
 import EmployeeDetail from "../details/Employee";
 import CourseDetail from "../details/Course";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
+import { Form, FormControl, FormField, FormItem, FormMessage } from "@/components/ui/form";
+import { confirmAlert, errorAlert, successAlert } from "@/utils/sweetalert";
+import coursesInstance from "@/instances/courses";
+import { realizationCourses } from "@/store/slices/courses";
+import { getYears } from "@/utils";
 
 export const columns: ColumnDef<any>[] = [
   {
@@ -82,6 +91,10 @@ export const columns: ColumnDef<any>[] = [
   },
 ];
 
+const FormSchema = z.object({
+  year: z.string({ required_error: "Year is required" }),
+});
+
 export function RealizationDataTable({ data }: any) {
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([]);
@@ -89,9 +102,12 @@ export function RealizationDataTable({ data }: any) {
   const [rowSelection, setRowSelection] = React.useState({});
   const [isLoading, setIsLoading] = React.useState(false);
 
+  const form = useForm<z.infer<typeof FormSchema>>({
+    resolver: zodResolver(FormSchema),
+  });
+
   const dispatch = useDispatch();
 
-  const user = useSelector((state: any) => state.user.data);
   const table = useReactTable({
     data,
     columns,
@@ -121,18 +137,36 @@ export function RealizationDataTable({ data }: any) {
   }
   const token = session.data?.token;
 
-  const handleClick = async () => {
-    // setIsLoading(true);
-    // try {
-    //   const selectedCourses = Object.keys(rowSelection).map((key) => data.find((item: any, index: number) => index === parseInt(key)));
-    //   console.log(selectedCourses);
-    // } catch (error: any) {
-    //   errorAlert(error.response.data.message);
-    // } finally {
-    //   setIsLoading(false);
-    //   setRowSelection({});
-    // }
-  };
+  async function onSubmit(selectData: z.infer<typeof FormSchema>) {
+    const confirmed = await confirmAlert(`Are you sure you want to realization in ${selectData.year} ?`);
+    if (!confirmed) return;
+
+    setIsLoading(true);
+    try {
+      const selectedCourses = Object.keys(rowSelection).map((key) => data.find((item: any, index: number) => index === parseInt(key)));
+
+      const selectedData: any = {
+        codes: selectedCourses.map((item: any) => item.codeCourse),
+        nikApproves: selectedCourses.map((item: any) => item.nik),
+        year: selectData.year,
+        action: "realization",
+      };
+
+      const response = await coursesInstance.manageCoursesEmployee(selectedData, token);
+      const realizationData = {
+        codes: selectedCourses.map((item: any) => item.codeCourse),
+        nikApproves: selectedCourses.map((item: any) => item.nik),
+        year: selectData.year,
+      };
+      dispatch(realizationCourses(realizationData));
+      successAlert(response.data.message);
+    } catch (error: any) {
+      errorAlert(error.response.data.message);
+    } finally {
+      setIsLoading(false);
+      setRowSelection({});
+    }
+  }
 
   return (
     <div className="w-full shadow-lg shadow-gray-300 px-2">
@@ -202,16 +236,43 @@ export function RealizationDataTable({ data }: any) {
         </div>
       </div>
       <div className="flex pb-2">
-        {isLoading ? (
-          <Button disabled>
-            <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-            Please wait
-          </Button>
-        ) : (
-          <Button onClick={() => handleClick()} className={`bg-green-600 hover:bg-green-800`}>
-            Realization
-          </Button>
-        )}
+        <Form {...form}>
+          <form onSubmit={form.handleSubmit(onSubmit)} className="flex gap-4">
+            <FormField
+              control={form.control}
+              name="year"
+              render={({ field }) => (
+                <FormItem>
+                  <Select onValueChange={field.onChange} defaultValue={field.value}>
+                    <FormControl>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select the year of realization" />
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                      {getYears().map((year: any) => (
+                        <SelectItem key={year} value={year}>
+                          {year}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            {isLoading ? (
+              <Button disabled>
+                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                Please wait
+              </Button>
+            ) : (
+              <Button type="submit" className={`bg-green-600 hover:bg-green-800`}>
+                Realization
+              </Button>
+            )}
+          </form>
+        </Form>
       </div>
     </div>
   );
