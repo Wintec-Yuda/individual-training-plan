@@ -69,6 +69,10 @@ export async function manageCoursesEmployee(data: any) {
           updatedEmployees.map((employee: any) => {
             if (employee.nik === data.nik) employee.isSubmit = true;
           });
+        } else if (data.action === "unregistered") {
+          updatedEmployees.map((employee: any, index: number) => {
+            if (employee.nik === data.nik) updatedEmployees.splice(index, 1);
+          });
         } else if (data.action === "register") {
           updatedEmployees.push({
             nik: data.nik,

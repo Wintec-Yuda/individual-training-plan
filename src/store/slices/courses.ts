@@ -33,6 +33,17 @@ const coursesSlice = createSlice({
         }
       });
     },
+    unregisterCourses: (state, action) => {
+      const { codes, nik } = action.payload;
+      codes.map((code: string) => {
+        const courseIndex = state.data.findIndex((course) => course.code === code);
+        if (courseIndex !== -1) {
+          state.data[courseIndex].employees.map((employee: any, index: number) => {
+            if (employee.nik === nik) state.data[courseIndex].employees.splice(index, 1);
+          });
+        }
+      });
+    },
     approveCourses: (state, action) => {
       const { codes, nikApproves } = action.payload;
       for (let i = 0; i < nikApproves.length; i++) {
@@ -53,5 +64,5 @@ const coursesSlice = createSlice({
   },
 });
 
-export const { setCourses, registerCourses, submitCourses, approveCourses } = coursesSlice.actions;
+export const { setCourses, registerCourses, submitCourses, approveCourses, unregisterCourses } = coursesSlice.actions;
 export default coursesSlice.reducer;

@@ -13,7 +13,7 @@ import { confirmAlert, errorAlert, successAlert } from "@/utils/sweetalert";
 import { useDispatch, useSelector } from "react-redux";
 import coursesInstance from "@/instances/courses";
 import { useSession } from "next-auth/react";
-import { registerCourses, submitCourses } from "@/store/slices/courses";
+import { registerCourses, submitCourses, unregisterCourses } from "@/store/slices/courses";
 
 export const columns: ColumnDef<any>[] = [
   {
@@ -145,6 +145,12 @@ export function CourseDataTable({ data, isCourses }: any) {
           nik: user.nik,
         };
         dispatch(submitCourses(registerData));
+      } else if (type === "unregister") {
+        const unregisterData = {
+          codes: selectedData.codes,
+          nik: user.nik,
+        };
+        dispatch(unregisterCourses(unregisterData));
       }
     } catch (error: any) {
       errorAlert(error.response.data.message);
@@ -231,9 +237,22 @@ export function CourseDataTable({ data, isCourses }: any) {
                 Please wait
               </Button>
             ) : (
-              <Button key={type} onClick={() => handleClick(type)} className="bg-green-600 hover:bg-green-800">
-                {type === "register" ? "Register Courses" : "Submit Courses"}
-              </Button>
+              <div className="flex gap-2">
+                <Button key={type} onClick={() => handleClick(type)} className="bg-green-600 hover:bg-green-800">
+                  {type === "register" ? "Register Courses" : "Submit Courses"}
+                </Button>
+                {type === "submit" &&
+                  (isLoading ? (
+                    <Button key={type} disabled>
+                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                      Please wait
+                    </Button>
+                  ) : (
+                    <Button key={type} onClick={() => handleClick("unregister")} className="bg-red-600 hover:bg-red-800">
+                      Unregistered Courses
+                    </Button>
+                  ))}
+              </div>
             ))
         )}
       </div>
