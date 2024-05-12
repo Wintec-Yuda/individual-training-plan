@@ -2,10 +2,9 @@ import { useSelector } from "react-redux";
 import { ApproveDataTable } from "../fragments/dataTables/Approve";
 import { useSession } from "next-auth/react";
 import { Loader2 } from "lucide-react";
-import { IEmployee } from "@/interfaces";
 
 const ApproveView = () => {
-  const registeredCourses = useSelector((state: any) => state.registeredCourses.data);
+  const courses = useSelector((state: any) => state.courses.data);
   const approves = useSelector((state: any) => state.approves.data);
 
   const session: any = useSession();
@@ -18,13 +17,11 @@ const ApproveView = () => {
   }
 
   const nik = session?.data?.user?.nik;
-
   const userApproves = approves.filter((approval: any) => approval.nik === nik);
-
   const submittedCourses: any = [];
 
-  registeredCourses.map((course: any) => {
-    course.employees.map((employee: any) => {
+  courses.map((course: any) => {
+    course.employees?.map((employee: any) => {
       if (employee.isSubmit) {
         userApproves.map((approval: any) => {
           if (approval.empccnames) {

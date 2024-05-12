@@ -8,7 +8,7 @@ import { useSession } from "next-auth/react";
 import { Loader2 } from "lucide-react";
 
 const DashboardView = () => {
-  const team = useSelector((state: any) => state.team.data);
+  const employees = useSelector((state: any) => state.employees.data);
   const session: any = useSession();
   if (session.status === "loading") {
     return (
@@ -25,7 +25,7 @@ const DashboardView = () => {
       <Link href={`/dashboard/registration/${nik}`}>
         <Button className="m-4">Self Registration</Button>
       </Link>
-      <EmployeeDataTable data={team} />
+      <EmployeeDataTable data={employees.filter((employee: any) => employee.superiorNIK === nik)} />
     </div>
   );
 };

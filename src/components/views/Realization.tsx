@@ -9,7 +9,7 @@ const RealizationView = () => {
   const [isRealization, setIsRealization] = useState("unrealization");
   const [year, setYear] = useState("");
 
-  const realizationCourses = useSelector((state: any) => state.realizationCourses.data);
+  const courses = useSelector((state: any) => state.courses.data);
 
   return (
     <div className="bg-emerald-50 rounded-lg p-4">
@@ -35,13 +35,41 @@ const RealizationView = () => {
           </Button>
         </div>
       </div>
-      <RealizationDataTable data={realizationCourses.filter((course: any) => {
-        if (isRealization === "unrealization") {
-          return typeof course.yearRealization === "undefined";
-        } else if (isRealization === "realization") {
-          return course.yearRealization === year;
-        }
-      })} />
+      <RealizationDataTable
+        data={courses.reduce((result: any, course: any) => {
+          if (isRealization === "unrealization") {
+            if (course.employees && Array.isArray(course.employees)) {
+              const approvedEmployees = course.employees.filter((employee: any) => employee.approve === 5 && typeof employee.yearRealization === "undefined");
+              if (approvedEmployees.length > 0) {
+                result.push(
+                  ...approvedEmployees.map((employee: any) => ({
+                    nik: employee.nik,
+                    name: employee.name,
+                    codeCourse: course.code,
+                    nameCourse: course.name,
+                  }))
+                );
+              }
+            }
+          } else if (isRealization === "realization") {
+            if (course.employees && Array.isArray(course.employees)) {
+              const approvedEmployees = course.employees.filter((employee: any) => employee.approve === 5 && employee.yearRealization === year);
+              if (approvedEmployees.length > 0) {
+                result.push(
+                  ...approvedEmployees.map((employee: any) => ({
+                    nik: employee.nik,
+                    name: employee.name,
+                    codeCourse: course.code,
+                    nameCourse: course.name,
+                    yearRealization: employee.yearRealization,
+                  }))
+                );
+              }
+            }
+          }
+          return result;
+        }, [])}
+      />
     </div>
   );
 };

@@ -3,12 +3,11 @@
 import ApproveView from "@/components/views/Approve";
 import { setApproves } from "@/store/slices/approves";
 import { setCourses } from "@/store/slices/courses";
-import { setRegisteredCourses } from "@/store/slices/registeredCourses";
 import { fetcher } from "@/utils/fetcher";
 import { errorAlert } from "@/utils/sweetalert";
 import { Loader } from "lucide-react";
 import { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import useSWR from "swr";
 
 const ApprovePage = () => {
@@ -31,14 +30,10 @@ const ApprovePage = () => {
     fetchData();
   }, []);
 
-  const courses = useSelector((state: any) => state.courses.data);
   const { data, error, isLoading } = useSWR("/api/approvals", fetcher);
 
   if (!isLoading) {
     dispatch(setApproves(data?.data));
-    const registeredCourses = courses.filter((course: any) => course.employees?.length > 0);
-
-    dispatch(setRegisteredCourses(registeredCourses));
   }
   return isLoading && !loading ? (
     <div className="flex justify-center items-center h-screen">

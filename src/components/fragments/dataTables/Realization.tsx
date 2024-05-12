@@ -10,7 +10,7 @@ import { DropdownMenu, DropdownMenuCheckboxItem, DropdownMenuContent, DropdownMe
 import { Input } from "@/components/ui/input";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { useSession } from "next-auth/react";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { HoverCard, HoverCardContent, HoverCardTrigger } from "@/components/ui/hover-card";
 import { Badge } from "@/components/ui/badge";
 import EmployeeDetail from "../details/Employee";
@@ -22,8 +22,8 @@ import { z } from "zod";
 import { Form, FormControl, FormField, FormItem, FormMessage } from "@/components/ui/form";
 import { confirmAlert, errorAlert, successAlert } from "@/utils/sweetalert";
 import coursesInstance from "@/instances/courses";
-import { realizationCourses } from "@/store/slices/courses";
 import { getYears } from "@/utils";
+import { realizationCourses } from "@/store/slices/courses";
 
 export const columns: ColumnDef<any>[] = [
   {
