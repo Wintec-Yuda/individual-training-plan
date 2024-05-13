@@ -5,7 +5,7 @@ import { setApproves } from "@/store/slices/approves";
 import { setCourses } from "@/store/slices/courses";
 import { fetcher } from "@/utils/fetcher";
 import { errorAlert } from "@/utils/sweetalert";
-import { Loader } from "lucide-react";
+import { Loader2 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import useSWR from "swr";
@@ -37,7 +37,7 @@ const ApprovePage = () => {
   }
   return isLoading && !loading ? (
     <div className="flex justify-center items-center h-screen">
-      <Loader />
+      <Loader2 className="w-8 h-8 animate-spin" />
     </div>
   ) : (
     <ApproveView />

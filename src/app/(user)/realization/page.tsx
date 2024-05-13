@@ -3,7 +3,7 @@
 import RealizationView from "@/components/views/Realization";
 import { setCourses } from "@/store/slices/courses";
 import { fetcher } from "@/utils/fetcher";
-import { Loader } from "lucide-react";
+import { Loader2 } from "lucide-react";
 import { useDispatch } from "react-redux";
 import useSWR from "swr";
 
@@ -17,7 +17,7 @@ const RealizationPage = () => {
   }
   return isLoading ? (
     <div className="flex justify-center items-center h-screen">
-      <Loader />
+      <Loader2 className="w-8 h-8 animate-spin" />
     </div>
   ) : (
     <RealizationView />
