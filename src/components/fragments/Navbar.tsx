@@ -11,8 +11,8 @@ import { Loader2 } from "lucide-react";
 
 const links = [
   { name: "Dashboard", path: "dashboard", icon: <TbLayoutDashboardFilled className="text-lg text-black" />, checkAccess: (user: any) => ["4", "5"].includes(user?.golongan) },
-  { name: "Approve", path: "approve", icon: <FaCheckCircle className="text-lg text-black" />, checkAccess: (user: any) => ["4", "5"].includes(user?.golongan) || user?.jobTtlName === "People Development Supervisor" },
-  { name: "Realization", path: "realization", icon: <PiNotepadFill className="text-lg text-black" />, checkAccess: (user: any) => user?.golongan === "4" && user?.jobTtlName === "People Development Supervisor" },
+  { name: "Approve", path: "approve", icon: <FaCheckCircle className="text-lg text-black" />, checkAccess: (user: any) => ["5"].includes(user?.golongan) || user?.jobTtlName === "People Development Supervisor" },
+  { name: "Realization", path: "realization", icon: <PiNotepadFill className="text-lg text-black" />, checkAccess: (user: any) => user?.jobTtlName === "People Development Supervisor" },
   { name: "Course", path: "course", icon: <GiNotebook className="text-lg text-black" />, checkAccess: (user: any) => user?.jobTtlName === "People Development Supervisor" },
 ];
 

@@ -53,11 +53,13 @@ export const columns: ColumnDef<any>[] = [
     header: () => <div>Category</div>,
     cell: ({ row }) => {
       const categories: any = row.getValue("categories");
-      return <div className="font-medium">
-        {categories.map((category: any) => (
-          <Badge key={category}>{category}</Badge>
-        ))}
-      </div>;
+      return (
+        <div className="font-medium">
+          {categories.map((category: any) => (
+            <Badge key={category}>{category}</Badge>
+          ))}
+        </div>
+      );
     },
   },
   {

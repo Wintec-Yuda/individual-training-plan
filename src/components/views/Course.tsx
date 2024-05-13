@@ -1,5 +1,3 @@
-"use client";
-
 import { useSelector } from "react-redux";
 import { Button } from "../ui/button";
 import { CourseListDataTable } from "../fragments/dataTables/CourseList";

@@ -11,7 +11,7 @@ import { Input } from "@/components/ui/input";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { useSession } from "next-auth/react";
 import coursesInstance from "@/instances/courses";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { confirmAlert, errorAlert, successAlert } from "@/utils/sweetalert";
 import { approveCourses } from "@/store/slices/courses";
 import { HoverCard, HoverCardContent, HoverCardTrigger } from "@/components/ui/hover-card";
