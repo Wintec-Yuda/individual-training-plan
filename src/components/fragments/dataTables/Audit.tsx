@@ -9,7 +9,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { DropdownMenu, DropdownMenuCheckboxItem, DropdownMenuContent, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { Input } from "@/components/ui/input";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import Link from "next/link";
+import { formatTimestamp } from "@/utils";
 
 export const columns: ColumnDef<any>[] = [
   {
@@ -28,7 +28,7 @@ export const columns: ColumnDef<any>[] = [
     accessorKey: "name",
     header: ({ column }) => {
       return (
-        <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}>
+        <Button className="w-40" variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}>
           Name
           <ArrowUpDown className="ml-2 h-4 w-4" />
         </Button>
@@ -37,42 +37,22 @@ export const columns: ColumnDef<any>[] = [
     cell: ({ row }) => <div className="lowercase">{row.getValue("name")}</div>,
   },
   {
-    accessorKey: "jobTtlName",
-    header: () => <div>job Title</div>,
+    accessorKey: "date",
+    header: () => <div className="w-40">Date</div>,
     cell: ({ row }) => {
-      return <div className="font-medium">{row.getValue("jobTtlName")}</div>;
+      return <div className="font-medium">{formatTimestamp(row.getValue("date"))}</div>;
     },
   },
   {
-    accessorKey: "golongan",
-    header: () => <div>Golongan</div>,
-    cell: ({ row }) => {
-      return <div className="font-medium">{row.getValue("golongan")}</div>;
-    },
-  },
-  {
-    accessorKey: "deptName",
-    header: () => <div>Department</div>,
-    cell: ({ row }) => {
-      return <div className="font-medium">{row.getValue("deptName")}</div>;
-    },
-  },
-  {
-    accessorKey: "registration",
+    accessorKey: "action",
     header: () => <div>Action</div>,
     cell: ({ row }) => {
-      return (
-        <div className="font-medium">
-          <Link href={`/dashboard/registration/${row.getValue("nik")}`}>
-            <Button>Registration</Button>
-          </Link>
-        </div>
-      );
+      return <div className="font-medium">{row.getValue("action")}</div>;
     },
   },
 ];
 
-export function EmployeeDataTable({ data }: any) {
+export function AuditDataTable({ data }: any) {
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([]);
   const [columnVisibility, setColumnVisibility] = React.useState<VisibilityState>({});

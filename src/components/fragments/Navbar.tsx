@@ -5,6 +5,7 @@ import { FaCheckCircle } from "react-icons/fa";
 import { TbLogout, TbLayoutDashboardFilled } from "react-icons/tb";
 import { PiNotepadFill } from "react-icons/pi";
 import { GiNotebook } from "react-icons/gi";
+import { AiOutlineAudit } from "react-icons/ai";
 import { confirmAlert } from "@/utils/sweetalert";
 import { signOut, useSession } from "next-auth/react";
 import { Loader2 } from "lucide-react";
@@ -14,6 +15,7 @@ const links = [
   { name: "Approve", path: "approve", icon: <FaCheckCircle className="text-lg text-black" />, checkAccess: (user: any) => ["5"].includes(user?.golongan) || user?.jobTtlName === "People Development Supervisor" },
   { name: "Realization", path: "realization", icon: <PiNotepadFill className="text-lg text-black" />, checkAccess: (user: any) => user?.jobTtlName === "People Development Supervisor" },
   { name: "Course", path: "course", icon: <GiNotebook className="text-lg text-black" />, checkAccess: (user: any) => user?.jobTtlName === "People Development Supervisor" },
+  { name: "Audit", path: "audit", icon: <AiOutlineAudit className="text-lg text-black" />, checkAccess: (user: any) => user?.jobTtlName === "People Development Supervisor" },
 ];
 
 const Navbar = () => {
@@ -36,7 +38,7 @@ const Navbar = () => {
   const user = sessionData?.user;
 
   return (
-    <div className="flex flex-col justify-between w-full h-screen py-4 mt-20 sm:mt-0">
+    <div className="flex flex-col justify-between w-full h-screen py-4 mt-24">
       <div className="flex flex-col gap-4">
         {links.map((link) => {
           if (link.checkAccess(user)) {

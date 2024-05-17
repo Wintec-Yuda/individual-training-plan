@@ -24,7 +24,7 @@ export const columns: ColumnDef<any>[] = [
   },
   {
     accessorKey: "code",
-    header: "Code",
+    header: () => <div>Code</div>,
     cell: ({ row }) => <div className="capitalize">{row.getValue("code")}</div>,
   },
   {
@@ -113,7 +113,7 @@ export const columns: ColumnDef<any>[] = [
   },
 ];
 
-export function CourseListDataTable({ data, isCourses }: any) {
+export function CourseListDataTable({ data }: any) {
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([]);
   const [columnVisibility, setColumnVisibility] = React.useState<VisibilityState>({});

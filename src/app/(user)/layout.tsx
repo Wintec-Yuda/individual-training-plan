@@ -22,7 +22,6 @@ const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
   return (
     <section className="flex flex-col">
       <aside className="fixed w-12 sm:w-48 h-screen backdrop-blur flex flex-col items-center justify-center sm:justify-normal gap-8 p-2">
-        <div className="hidden sm:flex h-20 w-20 rounded-full bg-emerald-100 shadow shadow-emerald-100"></div>
         <Navbar />
       </aside>
       <main className="overflow-hidden bg-branch">

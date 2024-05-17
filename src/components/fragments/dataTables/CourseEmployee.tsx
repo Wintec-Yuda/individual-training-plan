@@ -15,6 +15,8 @@ import coursesInstance from "@/instances/courses";
 import { useSession } from "next-auth/react";
 import { registerCourses, submitCourses, unregisterCourses } from "@/store/slices/courses";
 import { Badge } from "@/components/ui/badge";
+import auditsInstance from "@/instances/audits";
+import { addAudit } from "@/store/slices/audits";
 
 export const columns: ColumnDef<any>[] = [
   {
@@ -26,7 +28,7 @@ export const columns: ColumnDef<any>[] = [
   },
   {
     accessorKey: "code",
-    header: "Code",
+    header: () => <div>Code</div>,
     cell: ({ row }) => <div className="capitalize">{row.getValue("code")}</div>,
   },
   {
@@ -55,8 +57,8 @@ export const columns: ColumnDef<any>[] = [
       const categories: any = row.getValue("categories");
       return (
         <div className="font-medium">
-          {categories.map((category: any) => (
-            <Badge key={category}>{category}</Badge>
+          {categories.map((category: any, index: number) => (
+            <Badge key={index}>{category}</Badge>
           ))}
         </div>
       );
@@ -109,6 +111,7 @@ export function CourseEmployeeDataTable({ data, isCourses }: any) {
     );
   }
   const token = session.data?.token;
+  const name = session.data?.user?.name;
 
   const handleClick = async (type: string) => {
     const confirmed: boolean = await confirmAlert(`Are you sure you want ${type} this courses?`);
@@ -127,7 +130,18 @@ export function CourseEmployeeDataTable({ data, isCourses }: any) {
         action: type,
       };
 
+      const nameCourses = selectedCourses.map((item: any) => item.name);
+
       const response = await coursesInstance.manageCoursesEmployee(selectedData, token);
+
+      const dataAudit = {
+        nik: user.nik,
+        name: name,
+        action: `${type} ${selectedData.codes.length} courses (${nameCourses.join(", ")}) for ${user.name}`,
+        date: new Date(),
+      };
+      await auditsInstance.addAudit(dataAudit, token);
+      dispatch(addAudit(dataAudit));
 
       successAlert(response.data.message);
 
@@ -236,26 +250,26 @@ export function CourseEmployeeDataTable({ data, isCourses }: any) {
       </div>
       <div className="flex pb-2">
         {["register", "submit"].map(
-          (type: string) =>
+          (type: string, index: number) =>
             isCourses === type &&
             (isLoading ? (
-              <Button key={type} disabled>
+              <Button key={index} disabled>
                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                 Please wait
               </Button>
             ) : (
               <div className="flex gap-2">
-                <Button key={type} onClick={() => handleClick(type)} className="bg-green-600 hover:bg-green-800">
+                <Button key={index} onClick={() => handleClick(type)} className="bg-green-600 hover:bg-green-800">
                   {type === "register" ? "Register Courses" : "Submit Courses"}
                 </Button>
                 {type === "submit" &&
                   (isLoading ? (
-                    <Button key={type} disabled>
+                    <Button key={index} disabled>
                       <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                       Please wait
                     </Button>
                   ) : (
-                    <Button key={type} onClick={() => handleClick("unregister")} className="bg-red-600 hover:bg-red-800">
+                    <Button key={index} onClick={() => handleClick("unregister")} className="bg-red-600 hover:bg-red-800">
                       Unregistered Courses
                     </Button>
                   ))}
